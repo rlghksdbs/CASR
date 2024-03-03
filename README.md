@@ -39,6 +39,13 @@ You can download benchmark from Web [Link] (https://drive.google.com/drive/folde
 
 Path of Dataset must be set in ./config/*name_of_yaml*.yaml
 
+### Dataset preparation for AVIF LR images
+You can generate LR images with compression noise. (FFMpeg 6.1 Version)
+```
+## LR path & HR path must be set by manually
+python png2avif.py 
+```
+
 ### Dataset preparation for Noised LR images
 You can generate LR images with compression noise.
 ```
