@@ -33,9 +33,9 @@ You can download Div2k HR dataset from Web [DIV2K_HR](https://drive.google.com/d
 
 You can download Div2k LR bicubic dataset from Web [DIV2K_LR_Bicubic](https://drive.google.com/drive/folders/1eEcok5mPTUM3Qz8CJrQ5oCOy1UG8dePg?usp=drive_link)
 
-You can download Div2k LR AVIF dataset from Web [DIV2K_LR_AVIF] (https://drive.google.com/drive/folders/1FDrUBefKLWxfDp88t-KNOUbeS8pMC0tR?usp=drive_link)
+You can download Div2k LR AVIF dataset from Web [DIV2K_LR_AVIF](https://drive.google.com/drive/folders/1FDrUBefKLWxfDp88t-KNOUbeS8pMC0tR?usp=drive_link)
 
-You can download benchmark from Web [AIS_Validation] (https://drive.google.com/drive/folders/1G2VTvz1lHChQQcY-H7-XNd84esWR5gkj?usp=drive_link)
+You can download benchmark from Web [AIS_Validation](https://drive.google.com/drive/folders/1G2VTvz1lHChQQcY-H7-XNd84esWR5gkj?usp=drive_link)
 
 Path of Dataset must be set in ./config/*name_of_yaml*.yaml
 
