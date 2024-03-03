@@ -12,7 +12,7 @@ def png2avif(args):
     for i in img_list:
         retm = os.system('{} -hide_banner -y -loglevel error -i {}/{}'
                         ' -vf scale=ceil(iw/4):ceil(ih/4):flags=lanczos+accurate_rnd+full_chroma_int:sws_dither=none:param0=5' 
-                        ' -c:v libaom-av1 -qp 31 -preset 5 {}/{}.avif'.format(args.ffmpeg_dir, args.input_path, i, output_path, i[0:4]))
+                        ' -c:v libaom-av1 -qp 31 -preset 5 {}/{}x4.avif'.format(args.ffmpeg_dir, args.input_path, i, output_path, i[0:4]))
 
 
 if __name__ == "__main__":
