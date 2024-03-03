@@ -27,14 +27,15 @@ pip install torch==1.12.0+cu116 torchvision==0.13.0+cu116 torchaudio==0.12.0 --e
 
 ### Dataset of SR
 
-You can download Div2k dataset from Web [Link](https://cv.snu.ac.kr/research/EDSR/DIV2K.tar)
+You can download all dataset about AIS2024 from Web [Link](https://drive.google.com/drive/folders/1mD9bNoZDywvobOk1XrZupYKACF_nKN5t?usp=drive_link)
 
-You can download Benchmark dataset from Web [Link] (https://cv.snu.ac.kr/research/EDSR/benchmark.tar)
+You can download Div2k HR dataset from Web [Link](https://drive.google.com/drive/folders/1abtVNw4gOAnnwMF0t10Kc9uD1UOLqJHl?usp=drive_link)
 
-Combined test dataset from Drive [Link] (https://drive.google.com/file/d/1feZltvT0COZ87SjMxJpGMsrWTk1uLibD/view?usp=sharing)
- - Combined dataset includes: 
-    - Train: DIV2K train set (full 800), Flickr train set (2650 full), GTA (train seq 00 ~ 19 seq) sample 361, LSDIR (first 1000)
-    - Val: DIV2K val set (full 100), Flickr val (100), GTA (90), LSDIR(100)
+You can download Div2k LR bicubic dataset from Web [Link] (https://drive.google.com/drive/folders/1eEcok5mPTUM3Qz8CJrQ5oCOy1UG8dePg?usp=drive_link)
+
+You can download Div2k LR AVIF dataset from Web [Link] (https://drive.google.com/drive/folders/1FDrUBefKLWxfDp88t-KNOUbeS8pMC0tR?usp=drive_link)
+
+You can download benchmark from Web [Link] (https://drive.google.com/drive/folders/1G2VTvz1lHChQQcY-H7-XNd84esWR5gkj?usp=drive_link)
 
 Path of Dataset must be set in ./config/*name_of_yaml*.yaml
 
