@@ -10,15 +10,15 @@ The following is more advanced version implemented by us.
 Please refer to the following simple steps for installation.
 
 ```
-git clone https://github.com/Ganzooo/simple_real_time_super_resolution.git
-cd simple_real_time_super_resolution
+git clone https://github.com/rlghksdbs/Real-TimeSR
+cd Real-TimeSR
 pip install -r requirements.txt
 ```
 
 ### Docker Setting
 ```
-docker build --tag ntire2023 .
-nvidia-docker run --name ntire2023 -it --gpus all --ipc=host --pid=host -v /your/data/path/:/dataset -v /your/sorce_code/:/source_code --shm-size=64g ntire2023:latest
+docker build --tag ais2024 .
+nvidia-docker run --name ais2024 -it --gpus all --ipc=host --pid=host -v /your/data/path/:/dataset -v /your/sorce_code/:/source_code --shm-size=64g ntire2023:latest
 pip install -U numpy
 
 ##If you use RTX A6000
