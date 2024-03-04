@@ -40,9 +40,9 @@ except:
 
 parser = argparse.ArgumentParser(description='Simple Super Resolution')
 ## yaml configuration files
-parser.add_argument('--config', type=str, default='./configs/x2/repConv_x2_m4c32_relu_div2k_warmup_lr5e-4_b8_p384_normalize.yml', help = 'pre-config file for training')
+parser.add_argument('--config', type=str, default='./configs/x4.yml', help = 'pre-config file for training')
 parser.add_argument('--resume', type=str, default=None, help = 'resume training or not')
-parser.add_argument('--gpu_ids', type=int, default=1, help = 'gpu_ids')
+parser.add_argument('--gpu_ids', type=int, default=0, help = 'gpu_ids')
 
 if __name__ == '__main__':
     args = parser.parse_args()
@@ -68,7 +68,7 @@ if __name__ == '__main__':
     torch.set_num_threads(args.threads)
 
     if args.wandb:
-        run_log_wandb = wandb.init(entity="iilab", project='Realt_Time_Super_Resolution',
+        run_log_wandb = wandb.init(entity="iilab", project='AIS2024',
                     config={k:v for k, v in dict(opt).items() if '__' not in k},
                     anonymous=anonymous,
                     name=f"{args.model}|ps-{args.patch_size}|m-{args.m_plainsr}|c-{args.c_plainsr}|{args.loss}|{args.optimizer}|lr{str(args.lr)}|e{str(args.epochs)}",
