@@ -51,5 +51,5 @@ data_path: '../datasets/'
 test_path: '/dataset/SR/RLSR/val_phase/'
 eval_sets: ['DIV2K']
 
-av1 : False
+av1 : True
 qp_value : 31

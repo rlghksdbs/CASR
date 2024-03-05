@@ -2,7 +2,8 @@ import os
 import glob
 import random
 import pickle
-
+from PIL import Image
+import pillow_avif 
 import numpy as np
 import imageio
 import torch
@@ -42,7 +43,9 @@ class DIV2K(data.Dataset):
         self.LR_folder = LR_folder
         self.augment   = augment
         self.img_postfix = '.png'
-        self.scvalidation_pathh_size = patch_size
+        self.scale = scale
+        self.colors = colors
+        self.patch_size = patch_size
         self.repeat = repeat
         self.nums_trainset = 0
         self.train = train
@@ -62,7 +65,7 @@ class DIV2K(data.Dataset):
         self.hr_images = []
         self.lr_images = []
 
-        self.lr_filenames = sorted(glob.glob(self.LR_folder + '/*.png'))
+        self.lr_filenames = sorted(glob.glob(self.LR_folder + '/*.avif'))
 
         for idx, lr_name in enumerate(self.lr_filenames):
             _name = os.path.basename(lr_name)[0:4] + '.png'
@@ -92,7 +95,7 @@ class DIV2K(data.Dataset):
             os.makedirs(lr_dir)
         else:
             for i in range(LEN):
-                lr_npy_name = self.lr_filenames[i].split('/')[-1].replace('.png', '.npy')
+                lr_npy_name = self.lr_filenames[i].split('/')[-1].replace('.avif', '.npy')
                 lr_npy_name = os.path.join(lr_dir, lr_npy_name)
                 self.lr_npy_names.append(lr_npy_name)
 
@@ -115,10 +118,11 @@ class DIV2K(data.Dataset):
             for i in range(LEN):
                 if (i+1) % 50 == 0:
                     print("convert {} lr images to npy data!".format(i+1))
-                lr_image = imageio.imread(self.lr_filenames[i], pilmode="RGB")
+                # lr_image = imageio.imread(self.lr_filenames[i], pilmode="RGB")
+                lr_image = Image.open(self.lr_filenames[i])
                 if self.colors == 1:
                     lr_image = sc.rgb2ycbcr(lr_image)[:, :, 0:1]
-                lr_npy_name = self.lr_filenames[i].split('/')[-1].replace('.png', '.npy')
+                lr_npy_name = self.lr_filenames[i].split('/')[-1].replace('.avif', '.npy')
                 lr_npy_name = os.path.join(lr_dir, lr_npy_name)
                 self.lr_npy_names.append(lr_npy_name)
                 np.save(lr_npy_name, lr_image)

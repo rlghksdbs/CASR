@@ -1,4 +1,4 @@
-imageio==2.9.0
+imageio>=2.34.0
 numpy>=1.18.0
 pytorch_msssim==0.2.1
 tqdm==4.36.1
@@ -16,4 +16,5 @@ albumentations==1.0.0
 adamp==0.3.0
 adabelief-pytorch==0.2.1
 segmentation-models-pytorch==0.2.1
+pillow-avif-plugin==1.3.1
 #git+https://github.com/katsura-jp/pytorch-cosine-annealing-with-warmup
