@@ -18,7 +18,7 @@ pip install -r requirements.txt
 ### Docker Setting
 ```
 docker build --tag ais2024 .
-nvidia-docker run --name ais2024 -it --gpus all --ipc=host --pid=host -v /your/data/path/:/dataset -v /your/sorce_code/:/source_code --shm-size=64g ntire2023:latest
+nvidia-docker run --name ais2024 -it --gpus all --ipc=host --pid=host -v /your/data/path/:/AIS2024/dataset -v /your/sorce_code/:/AIS2024/source_code --shm-size=64g ais2024:latest
 pip install -U numpy
 
 ##If you use RTX A6000
@@ -29,13 +29,9 @@ pip install torch==1.12.0+cu116 torchvision==0.13.0+cu116 torchaudio==0.12.0 --e
 
 You can download all dataset about AIS2024 from Web [AIS2024](https://drive.google.com/drive/folders/1mD9bNoZDywvobOk1XrZupYKACF_nKN5t?usp=drive_link)
 
-You can download Div2k HR dataset from Web [DIV2K_HR](https://drive.google.com/drive/folders/1abtVNw4gOAnnwMF0t10Kc9uD1UOLqJHl?usp=drive_link)
+You can download Div2k train dataset from Web [train](https://drive.google.com/drive/folders/1GKGXR9vwLHc8Lbuaw9SRQOyYqpM578df?usp=drive_link)
 
-You can download Div2k LR bicubic dataset from Web [DIV2K_LR_Bicubic](https://drive.google.com/drive/folders/1eEcok5mPTUM3Qz8CJrQ5oCOy1UG8dePg?usp=drive_link)
-
-You can download Div2k LR AVIF dataset from Web [DIV2K_LR_AVIF](https://drive.google.com/drive/folders/1FDrUBefKLWxfDp88t-KNOUbeS8pMC0tR?usp=drive_link)
-
-You can download benchmark from Web [AIS_Validation](https://drive.google.com/drive/folders/1G2VTvz1lHChQQcY-H7-XNd84esWR5gkj?usp=drive_link)
+You can download Div2k validation bicubic dataset from Web [validation](https://drive.google.com/drive/folders/1_aVOZLJ5jjRxg9sBrUrR-X87jFkdV2eD?usp=drive_link)
 
 Path of Dataset must be set in ./config/*name_of_yaml*.yaml
 
@@ -61,7 +57,7 @@ You can set all Parameters at yaml file ***./config/name_of_model.yaml***
 cd simple_real_time_super_resolution
 
 ## If you set all settings correct
-python train.py --config ./config/x2_final/repConv_x2_m4c32_relu_div2k_warmup_lr5e-4_b8_p384_normalize.yml
+python train.py --config ./configs/x4.yml
 ```
 ### Testing
 You can set all Parameters in ***./config/config_base_test.yaml***
