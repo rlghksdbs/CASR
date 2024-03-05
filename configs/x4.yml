@@ -37,7 +37,7 @@ log_path: "./experiments"
 log_name:
 save_val_image: False
 
-wandb: True
+wandb: False
 
 ## Fp16 training
 mixed_pred: True
@@ -47,6 +47,9 @@ normalize: True
 threads: 1
 
 ## data specification
-data_path: '../dataset/DIV2K_A/'
+data_path: '../datasets/'
 test_path: '/dataset/SR/RLSR/val_phase/'
 eval_sets: ['DIV2K']
+
+av1 : False
+qp_value : 31
