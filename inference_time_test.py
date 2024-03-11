@@ -27,7 +27,7 @@ sr_ = Style.RESET_ALL
 
 parser = argparse.ArgumentParser(description='Simple Super Resolution')
 ## yaml configuration files
-parser.add_argument('--config', type=str, default='./configs/repConv/A100/repConv_x3_m4c64_relu_div2kA_warmup_lr5e-4_b8_p384_normalize.yml', help = 'pre-config file for training')
+parser.add_argument('--config', type=str, default='./configs/x4.yml', help = 'pre-config file for training')
 parser.add_argument('--weight', type=str, default='./WEIGHT_RESULT/20230318/PlainRepConv_x3_p384_m4_c64_relu_l1_adam_lr0.0005_e800_t2023-0317-1731_psnr_28_73/models/model_x3_best.pt', help = 'resume training or not')
 parser.add_argument('--outPath', type=str, default='./WEIGHT_RESULT/20230318/PlainRepConv_x3_p384_m4_c64_relu_l1_adam_lr0.0005_e800_t2023-0317-1731_psnr_28_73/', help = 'output image save')
 parser.add_argument('--gpu_ids', type=int, default=0, help = 'gpu_ids')

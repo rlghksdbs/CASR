@@ -9,7 +9,7 @@ from tqdm import tqdm
 from collections import OrderedDict
 from torch.utils.data import DataLoader
 
-import models
+import source.models
 import source.utils.dataset as dd
 
 from source.utils import util_logger
@@ -27,8 +27,8 @@ def main(args):
     """
     SETUP LOGGER
     """
-    util_logger.logger_info("NTIRE2023-RTSR", log_path=os.path.join(args.save_dir, args.submission_id, f"Submission_{args.submission_id}.txt"))
-    logger = logging.getLogger("NTIRE2023-RTSR")
+    util_logger.logger_info("AIS2024-RTSR", log_path=os.path.join(args.save_dir, args.submission_id, f"Submission_{args.submission_id}.txt"))
+    logger = logging.getLogger("AIS2024-RTSR")
     
     """
     BASIC SETTINGS
@@ -52,7 +52,7 @@ def main(args):
         
         if args.checkpoint is not None:
             model_path = os.path.join(args.checkpoint)
-            model.load_state_dict(torch.load(model_path), strict=True)
+            model.load_state_dict(torch.load(model_path, map_location='cuda:0'), strict=True)
         model.eval()
         for k, v in model.named_parameters():
             v.requires_grad = False
@@ -99,22 +99,23 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     # specify submission
-    parser.add_argument("--submission-id", type=str, default='0001')
+    parser.add_argument("--submission-id", type=str, default='0002')
     #parser.add_argument("--model-name", type=str, choices=["swin2sr", "imdn", "rfdn"], default='RepConv')
     parser.add_argument("--checkpoint", type=str, default='./WEIGHT_RESULT/Candidate/m4c64/PlainRepConv_BlockV2_x3_p384_m4_c64_relu_l2_adam_lr0.0001_e200_t2023-0321-1800_combined3_psnr_28_74/models/model_x3_best_submission_deploy.pt')
     parser.add_argument("--save-dir", type=str, default="./WEIGHT_RESULT/Candidate/m4c64/PlainRepConv_BlockV2_x3_p384_m4_c64_relu_l2_adam_lr0.0001_e200_t2023-0321-1800_combined3_psnr_28_74/")
-    parser.add_argument('--config', type=str, default='./configs/repConv/A100/repConvV2_x3_m4c64_relu_div2kA_warmup_lr5e-4_b8_p384_normalize.yml', help = 'pre-config file for training')
+    parser.add_argument('--config', type=str, default='./configs/x4.yml', help = 'pre-config file for training')
     
     # specify dirs
-    parser.add_argument("--lr-dir", type=str, default='/dataset/SR/RLSR/val_phase/val_phase_LR/')
+    parser.add_argument("--lr-dir", type=str, default='../datasets/RTSR/val_lr')
     parser.add_argument("--save-sr", action="store_true", default=True)
     
     # specify test case
-    parser.add_argument("--scale", type=int, default=3)
+    parser.add_argument("--scale", type=int, default=4)
     parser.add_argument("--batch-size", type=int, default=1)
     parser.add_argument("--num-workers", type=int, default=1)
     #parser.add_argument("--crop-size", type=int, nargs="+", default=[1080, 2040])
-    parser.add_argument("--crop-size", type=int, nargs="+", default=[720, 1280])
+    # parser.add_argument("--crop-size", type=int, nargs="+", default=[720, 1280])
+    parser.add_argument("--crop-size", type=int, nargs="+", default=[540, 960])
     parser.add_argument("--bicubic", action="store_true")
     parser.add_argument("--fp16", action="store_true", default=True)
     args = parser.parse_args()

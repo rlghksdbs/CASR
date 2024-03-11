@@ -5,6 +5,9 @@ import numpy as np
 import torch
 import cv2
 from torchvision.utils import make_grid
+from PIL import Image
+import imageio
+import pillow_avif
 from datetime import datetime
 # import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
@@ -126,11 +129,12 @@ def imread_uint(path, n_channels=3):
         img = cv2.imread(path, 0)  # cv2.IMREAD_GRAYSCALE
         img = np.expand_dims(img, axis=2)  # HxWx1
     elif n_channels == 3:
-        img = cv2.imread(path, cv2.IMREAD_UNCHANGED)  # BGR or G
-        if img.ndim == 2:
-            img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)  # GGG
-        else:
-            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  # RGB
+        # img = cv2.imread(path, cv2.IMREAD_UNCHANGED)  # BGR or G
+        img = np.array(Image.open(path).convert("RGB"))
+        # if img.ndim == 2:
+        #     img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)  # GGG
+        # else:
+        #     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  # RGB
     return img
 
 
