@@ -2,7 +2,7 @@ import torch
 import os 
 import numpy 
 from source.models.get_model import get_model
-from source.models.rtsrn import RealTimeSRNet
+from source.models.rtsrn import RTSRN
 from collections import OrderedDict
 from tqdm import tqdm
 
@@ -20,9 +20,9 @@ def profile_model(cfg):
     device = torch.device('cuda:{}'.format(0))
     warmup = True
     
-    x = torch.rand(1,3,720, 1280).cuda(0)
+    x = torch.rand(1,3,540, 960).cuda(0)
     
-    model_baseline = RealTimeSRNet(num_channels=3, num_feats=64, num_blocks=4, upscale=3).cuda()
+    model_baseline = RTSRN(num_channels=3, num_feats=64, num_blocks=4, upscale=3).cuda()
     model = get_model(cfg, device)
     
     ###Model -> RepConv model
@@ -57,7 +57,7 @@ def profile_model(cfg):
 def inference_test_model(cfg, device):
     device = torch.device('cuda:{}'.format(0))
     
-    x = torch.rand(1,3,720, 1280).cuda(device=device)
+    x = torch.rand(1,3,540, 960).cuda(device=device)
     
     #model_baseline = RealTimeSRNet(num_channels=3, num_feats=64, num_blocks=4, upscale=3).cuda(device=device)
     model = get_model(cfg, device)
