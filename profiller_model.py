@@ -5,6 +5,7 @@ from source.models.get_model import get_model
 from source.models.rtsrn import RTSRN
 from collections import OrderedDict
 from tqdm import tqdm
+from thop import profile
 
 import argparse, yaml
 
@@ -109,6 +110,19 @@ def inference_test_model(cfg, device):
         else: 
             print('------> Average runtime of FP32({}) is : {:.6f} ms'.format('Base test', ave_runtime))
 
+def calculate_macs(cfg, device):
+    input = torch.rand(1,3,540, 960).cuda(device=device)
+
+    model = get_model(cfg, device)
+
+    model.fuse_model()   #Inference mode
+
+    macs, params = profile(model, inputs=(input,))
+
+    print(macs, params)
+
+    print("MACs per pixel:", ((macs/3840)/2160)/1000, 'K')
+
 if __name__ == "__main__":
     args = parser.parse_args()
     if args.config:
@@ -131,4 +145,5 @@ if __name__ == "__main__":
         
     #profile_model()
     inference_test_model(args, device)
+    calculate_macs(args, device)
     
