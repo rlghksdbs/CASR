@@ -54,8 +54,8 @@ class DownRepConv_Block(nn.Module):
         self.upsampler = None
 
         backbone = []
-        self.pixelUnShuffle = nn.PixelUnshuffle(2)
-        self.head = RepBlockV2(inp_planes=self.colors*4, out_planes=self.channel_nums, act_type=self.act_type)
+        self.pixelUnShuffle = nn.PixelUnshuffle(3)
+        self.head = RepBlockV2(inp_planes=self.colors*9, out_planes=self.channel_nums, act_type=self.act_type)
         
         for i in range(self.module_nums):
             backbone += [RepBlockV2(inp_planes=self.channel_nums, out_planes=self.channel_nums, act_type=self.act_type)]
@@ -63,9 +63,9 @@ class DownRepConv_Block(nn.Module):
         self.backbone = nn.Sequential(*backbone)
         
         self.transition = nn.Sequential(#torch.nn.Conv2d(self.channel_nums, self.channel_nums, kernel_size=1, padding=0),
-                                        RepBlockV2(inp_planes=self.channel_nums, out_planes=self.colors*self.scale*self.scale*4, act_type='linear'))
+                                        RepBlockV2(inp_planes=self.channel_nums, out_planes=self.colors*self.scale*self.scale*9, act_type='linear'))
         
-        self.upsampler = nn.PixelShuffle(self.scale*2)
+        self.upsampler = nn.PixelShuffle(self.scale*3)
     
     def forward(self, x):
         
@@ -131,9 +131,9 @@ class DownRepConv_Block_deploy(nn.Module):
         self.upsampler = None
 
         backbone = []
-        self.pixelUnShuffle = nn.PixelUnshuffle(2)
+        self.pixelUnShuffle = nn.PixelUnshuffle(3)
 
-        self.head = Conv3X3(inp_planes=self.colors, out_planes=self.channel_nums, act_type=self.act_type)
+        self.head = Conv3X3(inp_planes=self.colors*9, out_planes=self.channel_nums, act_type=self.act_type)
         
         for i in range(self.module_nums):
             backbone += [Conv3X3(inp_planes=self.channel_nums, out_planes=self.channel_nums, act_type=self.act_type)]
@@ -141,9 +141,9 @@ class DownRepConv_Block_deploy(nn.Module):
         self.backbone = nn.Sequential(*backbone)
         
         self.transition = nn.Sequential(#torch.nn.Conv2d(self.channel_nums, self.channel_nums, kernel_size=1, padding=0),
-                                        Conv3X3(inp_planes=self.channel_nums, out_planes=self.colors*self.scale*self.scale, act_type='linear'))
+                                        Conv3X3(inp_planes=self.channel_nums, out_planes=self.colors*self.scale*self.scale*9, act_type='linear'))
         
-        self.upsampler = nn.PixelShuffle(self.scale)
+        self.upsampler = nn.PixelShuffle(self.scale*3)
     
     def forward(self, x):
         #y = self.backbone(x) + x
