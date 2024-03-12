@@ -13,7 +13,7 @@ import torch.autograd.profiler as profiler
 
 parser = argparse.ArgumentParser(description='Simple Super Resolution')
 ## yaml configuration files
-parser.add_argument('--config', type=str, default='./configs/repConv/repConv_x3_m4c48_relu_combined2.yml', help = 'pre-config file for training')
+parser.add_argument('--config', type=str, default='./configs/x4.yml', help = 'pre-config file for training')
 parser.add_argument('--gpu_ids', type=int, default=0, help = 'gpu_ids')
 
 def profile_model(cfg):
