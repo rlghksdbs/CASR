@@ -3,7 +3,7 @@ comment: 'Val_BEST'
 ## parameters for plain
 scale: 4
 colors: 3
-m_plainsr: 3
+m_plainsr: 1
 c_plainsr: 32
 with_bn: 0
 act_type: 'gelu'
