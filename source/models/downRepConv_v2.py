@@ -29,7 +29,8 @@ class Conv3X3(nn.Module):
             self.act = nn.Softplus()
         elif self.act_type == 'gelu':
             self.act = nn.GELU()
-            
+        elif self.act_type == 'silu':
+            self.act = nn.SiLU(inplace=True)
         elif self.act_type == 'linear':
             pass
         else:
