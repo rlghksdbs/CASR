@@ -113,7 +113,7 @@ class DownRepConv_Block_v2(nn.Module):
         
         #y = torch.cat([y, x], dim=1)
         
-        y = self.transition(y+y0)
+        y = self.transition(y)
         y = self.upsampler(y) 
         y = self.input_conv2(y+x)
         y = self.upsampler1(y) 
@@ -251,7 +251,7 @@ class DownRepConv_Block_v2_backbone_res(nn.Module):
         
         #y = torch.cat([y, x], dim=1)
         
-        y = self.transition(y)
+        y = self.transition(y+y0)
         y = self.upsampler(y) 
         y = self.input_conv2(y+x)
         y = self.upsampler1(y) 
