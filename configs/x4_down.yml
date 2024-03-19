@@ -3,8 +3,8 @@ comment: 'Val_BEST'
 ## parameters for plain
 scale: 4
 colors: 3
-m_plainsr: 4
-c_plainsr: 16
+m_plainsr: 3
+c_plainsr: 32
 with_bn: 0
 act_type: 'gelu'
 pretrain:
@@ -44,12 +44,13 @@ mixed_pred: True
 normalize: True
 
 ## hardware specification
-threads: 1
+num_workers: 8
 
 ## data specification
-data_path: '../datasets/'
-test_path: '../datasets/RTSR/val_lr'
-eval_sets: ['DIV2K']
+data_path: '/dataset/SR/AIS2024/'
+test_path: '/dataset/SR/AIS2024/val_phase/'
+val_set: 'DIV2K'
+train_set: 'DIV2K'
 
 av1 : True
 qp_value : 31

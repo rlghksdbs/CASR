@@ -6,17 +6,23 @@ from torch.utils.data import DataLoader
 
 def create_datasets(args, mode='train'):
     if args.av1 == True:
-        train_path = os.path.join('DIV2K_train_LR_avif', 'qp_{}'.format(args.qp_value))
-        validation_path = os.path.join('DIV2K_val_LR_avif', 'qp_{}'.format(args.qp_value))
+        train_HR_path = '{}_train_HR'.format(args.train_set)
+        validation_HR_path = '{}_val_HR'.format(args.val_set)
+        
+        train_LR_path = os.path.join('{}_train_LR_avif'.format(args.train_set), 'qp_{}'.format(args.qp_value))
+        validation_LR_path = os.path.join('{}_val_LR_avif'.format(args.val_set), 'qp_{}'.format(args.qp_value))
     else:
-        train_path = 'DIV2K_train_LR_bicubic'
-        validation_path = 'DIV2K_val_LR_bicubic'
+        train_HR_path = '{}_train_HR'.format(args.train_set)
+        validation_HR_path = '{}_val_HR'.format(args.val_set)
+        
+        train_LR_path = 'DIV2K_train_LR_bicubic'
+        validation_LR_path = 'DIV2K_val_LR_bicubic'
 
     if mode == 'train':
         div2k = DIV2K(
-            os.path.join(args.data_path, 'Train', 'DIV2K_train_HR'), 
-            os.path.join(args.data_path, 'Train', train_path), 
-            os.path.join(args.data_path, 'cache'),
+            os.path.join(args.data_path, 'Train', train_HR_path), 
+            os.path.join(args.data_path, 'Train', train_LR_path), 
+            os.path.join(args.data_path, '{}_cache'.format(args.train_set)),
             train=True, 
             augment=args.data_augment, 
             scale=args.scale, 
@@ -27,25 +33,25 @@ def create_datasets(args, mode='train'):
             av1 = args.av1,
             qp_value = args.qp_value
         )
-        train_dataloader = DataLoader(dataset=div2k, num_workers=args.threads, batch_size=args.batch_size, shuffle=True, pin_memory=True, drop_last=True)
+        train_dataloader = DataLoader(dataset=div2k, num_workers=args.num_workers, batch_size=args.batch_size, shuffle=True, pin_memory=False, drop_last=True)
         
         valid_dataloaders = []
-        if 'DIV2K' in args.eval_sets:
-            div2k_val = DIV2K(
-                os.path.join(args.data_path, 'Val', 'DIV2K_val_HR'), 
-                os.path.join(args.data_path, 'Val', validation_path), 
-                os.path.join(args.data_path, 'cache_val'),
-                train=False, 
-                augment=args.data_augment, 
-                scale=args.scale, 
-                colors=args.colors, 
-                patch_size=args.patch_size, 
-                repeat=args.data_repeat, 
-                normalize=args.normalize,
-                av1 = args.av1,
-                qp_value = args.qp_value
-            )
-            valid_dataloaders += [{'name': 'DIV2K', 'dataloader': DataLoader(dataset=div2k_val, batch_size=1, shuffle=False)}]
+        #if 'DIV2K' in args.eval_sets:
+        div2k_val = DIV2K(
+            os.path.join(args.data_path, 'Val', validation_HR_path), 
+            os.path.join(args.data_path, 'Val', validation_LR_path), 
+            os.path.join(args.data_path, '{}_cache_val'.format(args.val_set)),
+            train=False, 
+            augment=args.data_augment, 
+            scale=args.scale, 
+            colors=args.colors, 
+            patch_size=args.patch_size, 
+            repeat=args.data_repeat, 
+            normalize=args.normalize,
+            av1 = args.av1,
+            qp_value = args.qp_value
+        )
+        valid_dataloaders += [{'name': str(args.val_set), 'dataloader': DataLoader(dataset=div2k_val, batch_size=1, shuffle=False)}]
     else: #test mode
         # test_loader = DIV2K(
         #         os.path.join(args.test_path, 'val_phase_HR/'), 

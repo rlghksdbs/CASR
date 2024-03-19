@@ -17,8 +17,9 @@ def crop_patch(lr, hr, patch_size, scale, augment=True):
     lr_h, lr_w, _ = lr.shape
     hp = patch_size
     lp = patch_size // scale
-    lx, ly = random.randrange(0, lr_w - lp + 1), random.randrange(0, lr_h - lp + 1)
+    lx, ly = random.randrange(0, lr_w - lp), random.randrange(0, lr_h - lp)
     hx, hy = lx * scale, ly * scale
+    #print(hx, hy)
     lr_patch, hr_patch = lr[ly:ly+lp, lx:lx+lp, :], hr[hy:hy+hp, hx:hx+hp, :]
     # augment data
     if augment:
@@ -54,13 +55,14 @@ class DIV2K(data.Dataset):
         self.av1 = av1
         self.qp_value = qp_value
 
-
         ## for raw png images
         self.hr_filenames = []
         self.lr_filenames = []
+        
         ## for numpy array data
         self.hr_npy_names = []
         self.lr_npy_names = []
+        
         ## store in ram
         self.hr_images = []
         self.lr_images = []
@@ -68,13 +70,9 @@ class DIV2K(data.Dataset):
         self.lr_filenames = sorted(glob.glob(self.LR_folder + '/*.avif'))
 
         for idx, lr_name in enumerate(self.lr_filenames):
-            _name = os.path.basename(lr_name)[0:4] + '.png'
+            #_name = os.path.basename(lr_name)[0:4] + '.png'
+            _name = os.path.basename(lr_name)[:-7] + '.png'
             self.hr_filenames.append(os.path.join(self.HR_folder, _name))
-            # if _name[1] == 'pr':
-            #     base_name = _name[4] + '_' + _name[5] + '_' + _name[6] + '_' + _name[7]
-            # else: 
-            #     base_name = _name[3] + '_' + _name[4] + '_' + _name[5] + '_' + _name[6]
-            #self.imageOrgName.append(os.path.join(os.path.join(self.org_path,self.image_org_folder),base_name))
             
         assert len(self.hr_filenames) == len(self.lr_filenames)
           
@@ -139,9 +137,12 @@ class DIV2K(data.Dataset):
         # get periodic index
         idx = idx % self.nums_trainset
         # get whole image
+        
         hr, lr = np.load(self.hr_npy_names[idx]), np.load(self.lr_npy_names[idx])
+        
         if self.train:
             train_lr_patch, train_hr_patch = crop_patch(lr, hr, self.patch_size, self.scale, True)
+            #print(self.lr_npy_names[idx], train_lr_patch.size(1), train_lr_patch.size(2), train_hr_patch.size(1), train_hr_patch.size(2) )
             if self.normalize:
                 return train_lr_patch / 255., train_hr_patch / 255.
             else: 

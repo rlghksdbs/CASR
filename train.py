@@ -40,7 +40,7 @@ except:
 
 parser = argparse.ArgumentParser(description='Simple Super Resolution')
 ## yaml configuration files
-parser.add_argument('--config', type=str, default='./configs/x4.yml', help = 'pre-config file for training')
+parser.add_argument('--config', type=str, default='./configs/x4_repdown.yml', help = 'pre-config file for training')
 parser.add_argument('--resume', type=str, default=None, help = 'resume training or not')
 parser.add_argument('--gpu_ids', type=int, default=0, help = 'gpu_ids')
 
@@ -65,7 +65,6 @@ if __name__ == '__main__':
     else:
         print("use cpu for training!")
         device = torch.device('cpu')
-    torch.set_num_threads(args.threads)
 
     if args.wandb:
         run_log_wandb = wandb.init(entity="iilab", project='AIS2024',
