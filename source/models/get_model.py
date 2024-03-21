@@ -7,7 +7,7 @@ from .downRepConv import DownRepConv_Block, DownRepConv_Block_deploy
 from .downRepConv_v2 import DownRepConv_Block_v2, DownRepConv_Block_v2_deploy, DownRepConv_Block_v2_backbone_res, DownRepConv_Block_v2_backbone_res_deploy
 from .RepNetworkPlain import RepNetwork_V001, RepNetwork_V002, RepNetwork_V004_BestStruct, RepNetwork_V005_BestStruct, RepNetwork_V006_BestStruct, RepNetwork_V007_BestStruct, RepNetwork_V010_BestStruct, RepNetwork_V010_BestStruct_deploy
 from .RepNetworkPlain import *
-
+from .RepNetworkPlain_tea import *
 from .RepConv_block import RepBlock, RepBlockV2, RepBlockV3, RepBlockV4, RepBlockV5, RepBlockV6, RepBlockV7, RepBlockV8
 
 def get_model(cfg, device, mode='Train'):
@@ -104,6 +104,18 @@ def get_model(cfg, device, mode='Train'):
             model = RepNetwork_V011_BestStruct(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors, block_type=RepBlockV8)
         else: 
             model = RepNetwork_V010_BestStruct_deploy(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors)   
+    
+
+    ###teacher model    
+    elif cfg.model == 'RepNetwork_V012_BestStruct_teacher':
+        if mode == 'Train':
+            model = RepNetwork_V011_BestStruct_teacher(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors, block_type=RepBlockV5)
+        else: 
+            model = RepNetwork_V010_BestStruct_teacher_deploy(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors)
+
+    
+    
+    
     else: 
         raise NameError('Choose proper model name!!!')
     model.to(device)
