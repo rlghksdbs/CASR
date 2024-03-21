@@ -184,7 +184,7 @@ def get_stat_dict():
                 'epoch': 0
             }
         },
-        'manga109': {
+        'Combined4': {
             'psnrs': [],
             'ssims': [],
             'best_psnr': {

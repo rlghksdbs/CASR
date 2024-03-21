@@ -5,6 +5,10 @@ from .fsrcnn import FSRCNN
 from .rtsrn import RTSRN
 from .downRepConv import DownRepConv_Block, DownRepConv_Block_deploy
 from .downRepConv_v2 import DownRepConv_Block_v2, DownRepConv_Block_v2_deploy, DownRepConv_Block_v2_backbone_res, DownRepConv_Block_v2_backbone_res_deploy
+from .RepNetworkPlain import RepNetwork_V001, RepNetwork_V002, RepNetwork_V004_BestStruct, RepNetwork_V005_BestStruct, RepNetwork_V006_BestStruct, RepNetwork_V007_BestStruct, RepNetwork_V010_BestStruct, RepNetwork_V010_BestStruct_deploy
+from .RepNetworkPlain import *
+
+from .RepConv_block import RepBlock, RepBlockV2, RepBlockV3, RepBlockV4, RepBlockV5, RepBlockV6, RepBlockV7, RepBlockV8
 
 def get_model(cfg, device, mode='Train'):
     if cfg.model == 'plainsr':
@@ -50,6 +54,56 @@ def get_model(cfg, device, mode='Train'):
             model = DownRepConv_Block_v2_backbone_res(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors)
         else: 
             model = DownRepConv_Block_v2_backbone_res_deploy(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors)
+    elif cfg.model == 'RepNetwork_V001':
+       model = RepNetwork_V001(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors)
+    elif cfg.model == 'RepNetwork_V002':
+       model = RepNetwork_V002(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors)
+    elif cfg.model == 'RepNetwork_V004_BestStruct':
+        if mode == 'Train':
+            model = RepNetwork_V004_BestStruct(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors, deploy=False)
+        else: 
+            model = RepNetwork_V004_BestStruct(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors, deploy=True)
+    elif cfg.model == 'RepNetwork_V005_BestStruct':
+       model = RepNetwork_V005_BestStruct(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors)
+    elif cfg.model == 'RepNetwork_V006_BestStruct':
+       model = RepNetwork_V006_BestStruct(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors)
+    elif cfg.model == 'RepNetwork_V007_BestStruct':
+       model = RepNetwork_V007_BestStruct(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors)
+    elif cfg.model == 'RepNetwork_V010_BestStruct':
+        if mode == 'Train':
+            model = RepNetwork_V010_BestStruct(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors)
+        else: 
+            model = RepNetwork_V010_BestStruct_deploy(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors)
+    elif cfg.model == 'RepNetwork_V011_BestStruct':
+        if mode == 'Train':
+            model = RepNetwork_V011_BestStruct(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors, block_type=RepBlockV4)
+        else: 
+            model = RepNetwork_V010_BestStruct_deploy(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors)
+    elif cfg.model == 'RepNetwork_V012_BestStruct':
+        if mode == 'Train':
+            model = RepNetwork_V011_BestStruct(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors, block_type=RepBlockV5)
+        else: 
+            model = RepNetwork_V010_BestStruct_deploy(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors)
+    elif cfg.model == 'RepNetwork_V013_BestStruct':
+        if mode == 'Train':
+            model = RepNetwork_V011_BestStruct(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors, block_type=RepBlockV6)
+        else: 
+            model = RepNetwork_V010_BestStruct_deploy(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors)
+    elif cfg.model == 'RepNetwork_V014_BestStruct':
+        if mode == 'Train':
+            model = RepNetwork_V014_BestStruct(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors, block_type=RepBlockV2)
+        else: 
+            model = RepNetwork_V014_BestStruct_deploy(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors)
+    elif cfg.model == 'RepNetwork_V015_BestStruct':
+        if mode == 'Train':
+            model = RepNetwork_V011_BestStruct(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors, block_type=RepBlockV7)
+        else: 
+            model = RepNetwork_V010_BestStruct_deploy(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors)  
+    elif cfg.model == 'RepNetwork_V016_BestStruct':
+        if mode == 'Train':
+            model = RepNetwork_V011_BestStruct(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors, block_type=RepBlockV8)
+        else: 
+            model = RepNetwork_V010_BestStruct_deploy(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors)   
     else: 
         raise NameError('Choose proper model name!!!')
     model.to(device)

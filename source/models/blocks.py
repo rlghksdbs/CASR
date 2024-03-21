@@ -139,14 +139,29 @@ class OREPA_1x1(nn.Module):
 
     def __init__(self, in_channels, out_channels, kernel_size=1,
                  stride=1, padding=0, dilation=1, groups=1,
-                 deploy=False, nonlinear=None, single_init=False):
+                 deploy=False, nonlinear=None, act_type=None, single_init=False):
         super(OREPA_1x1, self).__init__()
         self.deploy = deploy
 
-        if nonlinear is None:
+        self.act_type = 'gelu'
+        if self.act_type == 'prelu':
+            self.nonlinear = nn.PReLU(num_parameters=self.out_planes)
+        elif self.act_type == 'relu':
+            self.nonlinear = nn.ReLU(inplace=True)
+        elif self.act_type == 'rrelu':
+            self.nonlinear = nn.RReLU(lower=-0.05, upper=0.05)
+        elif self.act_type == 'softplus':
+            self.nonlinear = nn.Softplus()
+        elif self.act_type == 'gelu':
+            self.nonlinear = nn.GELU()
+        elif self.act_type == 'linear':
             self.nonlinear = nn.Identity()
         else:
-            self.nonlinear = nonlinear
+            self.nonlinear = nn.Identity()
+        # if nonlinear is None:
+        #     self.nonlinear = nn.Identity()
+        # else:
+        #     self.nonlinear = nonlinear
 
         self.in_channels = in_channels
         self.out_channels = out_channels

@@ -27,13 +27,13 @@ def choose_blk(kernel_size):
         raise NotImplementedError
     return blk_type
 
-def conv_bn(in_channels, out_channels, kernel_size, stride=1, padding=0, dilation=1, groups=1, act_type='gelu', assign_type=None):
+def conv_bn(in_channels, out_channels, kernel_size, stride=1, padding=0, dilation=1, groups=1, act_type='gelu', deploy=False, assign_type=None):
     if assign_type is not None:
         blk_type = assign_type
     else:
         blk_type = choose_blk(kernel_size)
     return blk_type(in_channels=in_channels, out_channels=out_channels, kernel_size=kernel_size, stride=stride,
-                                  padding=padding, dilation=dilation, groups=groups, act_type=act_type, deploy=DEPLOY_FLAG)
+                                  padding=padding, dilation=dilation, groups=groups, act_type=act_type, deploy=deploy)
 
 def conv_bn_relu(in_channels, out_channels, kernel_size, stride=1, padding=0, dilation=1, groups=1, assign_type=None):
     if assign_type is not None:
