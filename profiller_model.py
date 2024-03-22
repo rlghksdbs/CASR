@@ -14,7 +14,7 @@ import torch.autograd.profiler as profiler
 
 parser = argparse.ArgumentParser(description='Simple Super Resolution')
 ## yaml configuration files
-parser.add_argument('--config', type=str, default='./configs/x4.yml', help = 'pre-config file for training')
+parser.add_argument('--config', type=str, default='./configs/best_model_repv12.yml', help = 'pre-config file for training')
 parser.add_argument('--gpu_ids', type=int, default=0, help = 'gpu_ids')
 
 def profile_model(cfg):
@@ -23,11 +23,11 @@ def profile_model(cfg):
     
     x = torch.rand(1,3,540, 960).cuda(0)
     
-    model_baseline = RTSRN(num_channels=3, num_feats=64, num_blocks=4, upscale=3).cuda()
-    model = get_model(cfg, device)
+    model_baseline = RTSRN(num_channels=3, num_feats=64, num_blocks=4, upscale=4).cuda()
+    model = get_model(cfg, device, mode='Deploy')
     
     ###Model -> RepConv model
-    model.fuse_model()   #Inference mode
+    #model.fuse_model()   #Inference mode
     
     #summary_(model,(3,128,128),batch_size=10)  
     model.eval()
