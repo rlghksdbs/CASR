@@ -9,8 +9,12 @@ def create_datasets(args, mode='train'):
         train_HR_path = '{}_train_HR'.format(args.train_set)
         validation_HR_path = '{}_val_HR'.format(args.val_set)
         
-        train_LR_path = os.path.join('{}_train_LR_avif'.format(args.train_set), 'qp_{}'.format(args.qp_value))
-        validation_LR_path = os.path.join('{}_val_LR_avif'.format(args.val_set), 'qp_{}'.format(args.qp_value))
+        if args.all_qp:
+            train_LR_path = os.path.join('{}_train_LR_avif'.format(args.train_set), 'all')
+            validation_LR_path = os.path.join('{}_val_LR_avif'.format(args.val_set), 'all')
+        else: 
+            train_LR_path = os.path.join('{}_train_LR_avif'.format(args.train_set), 'qp_{}'.format(args.qp_value))
+            validation_LR_path = os.path.join('{}_val_LR_avif'.format(args.val_set), 'qp_{}'.format(args.qp_value))
     else:
         train_HR_path = '{}_train_HR'.format(args.train_set)
         validation_HR_path = '{}_val_HR'.format(args.val_set)
@@ -31,7 +35,8 @@ def create_datasets(args, mode='train'):
             repeat=args.data_repeat, 
             normalize=args.normalize,
             av1 = args.av1,
-            qp_value = args.qp_value
+            qp_value = args.qp_value, 
+            all_qp = args.all_qp
         )
         train_dataloader = DataLoader(dataset=div2k, num_workers=args.num_workers, batch_size=args.batch_size, shuffle=True, pin_memory=False, drop_last=True)
         
@@ -49,7 +54,8 @@ def create_datasets(args, mode='train'):
             repeat=args.data_repeat, 
             normalize=args.normalize,
             av1 = args.av1,
-            qp_value = args.qp_value
+            qp_value = args.qp_value,
+            all_qp = args.all_qp
         )
         valid_dataloaders += [{'name': str(args.val_set), 'dataloader': DataLoader(dataset=div2k_val, batch_size=1, shuffle=False)}]
     else: #test mode

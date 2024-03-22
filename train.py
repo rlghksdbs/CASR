@@ -40,7 +40,7 @@ except:
 
 parser = argparse.ArgumentParser(description='Simple Super Resolution')
 ## yaml configuration files
-parser.add_argument('--config', type=str, default='./configs/x4_repdown.yml', help = 'pre-config file for training')
+parser.add_argument('--config', type=str, default='./configs/l2_finetune_best_model_repv12.yml', help = 'pre-config file for training')
 parser.add_argument('--resume', type=str, default=None, help = 'resume training or not')
 parser.add_argument('--gpu_ids', type=int, default=0, help = 'gpu_ids')
 
@@ -100,10 +100,10 @@ if __name__ == '__main__':
     ## resume training
     start_epoch = 1
     if args.resume is not None:
-        ckpt_files = os.path.join(args.resume, 'models', "model_x3_last.pt")
+        ckpt_files = os.path.join(args.resume, 'models', "model_x4_last.pt")
         if len(ckpt_files) != 0:
             #ckpt_files = sorted(ckpt_files, key=lambda x: int(x.replace('.pt','').split('_')[-1]))
-            ckpt = torch.load(ckpt_files)
+            ckpt = torch.load(ckpt_files, map_location='cpu')
             prev_epoch = ckpt['epoch']
 
             start_epoch = prev_epoch + 1

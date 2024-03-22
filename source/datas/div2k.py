@@ -37,7 +37,7 @@ class DIV2K(data.Dataset):
     def __init__(
         self, HR_folder, LR_folder, CACHE_folder, 
         train=True, augment=True, scale=2, colors=1, 
-        patch_size=96, repeat=168, normalize=True, av1=True, qp_value=31
+        patch_size=96, repeat=168, normalize=True, av1=True, qp_value=31, all_qp=False
     ):
         super(DIV2K, self).__init__()
         self.HR_folder = HR_folder
@@ -54,6 +54,7 @@ class DIV2K(data.Dataset):
         self.normalize = normalize
         self.av1 = av1
         self.qp_value = qp_value
+        self.all_qp = all_qp
 
         ## for raw png images
         self.hr_filenames = []
@@ -67,11 +68,17 @@ class DIV2K(data.Dataset):
         self.hr_images = []
         self.lr_images = []
 
+        ## number of qp for train and test
+        number_of_qp = 5 ### 31, 39, 47, 55, 63
+        
         self.lr_filenames = sorted(glob.glob(self.LR_folder + '/*.avif'))
 
         for idx, lr_name in enumerate(self.lr_filenames):
             #_name = os.path.basename(lr_name)[0:4] + '.png'
-            _name = os.path.basename(lr_name)[:-7] + '.png'
+            if self.all_qp:
+                _name = os.path.basename(lr_name)[:-13] + '.png'
+            else:
+                _name = os.path.basename(lr_name)[:-7] + '.png'
             self.hr_filenames.append(os.path.join(self.HR_folder, _name))
             
         assert len(self.hr_filenames) == len(self.lr_filenames)
@@ -81,6 +88,8 @@ class DIV2K(data.Dataset):
         LEN = self.nums_trainset
         hr_dir = os.path.join(self.cache_dir, 'hr', 'ycbcr' if self.colors==1 else 'rgb')
         lr_dir = os.path.join(self.cache_dir, 'lr_x{}'.format(self.scale), 'ycbcr' if self.colors==1 else 'rgb')
+        
+        self.hr_dir = hr_dir
         if not os.path.exists(hr_dir):
             os.makedirs(hr_dir)
         else:
@@ -98,19 +107,34 @@ class DIV2K(data.Dataset):
                 self.lr_npy_names.append(lr_npy_name)
 
         ## prepare hr images
-        if len(glob.glob(os.path.join(hr_dir, "*.npy"))) != len(self.hr_filenames):
-            for i in range(LEN):
-                if (i+1) % 50 == 0:
-                    print("convert {} hr images to npy data!".format(i+1))
-                hr_image = imageio.imread(self.hr_filenames[i], pilmode="RGB")
-                if self.colors == 1:
-                    hr_image = sc.rgb2ycbcr(hr_image)[:, :, 0:1]
-                hr_npy_name = self.hr_filenames[i].split('/')[-1].replace('.png', '.npy')
-                hr_npy_name = os.path.join(hr_dir, hr_npy_name)
-                self.hr_npy_names.append(hr_npy_name)
-                np.save(hr_npy_name, hr_image)
-        else:
-            print("hr npy datas have already been prepared!, hr: {}".format(len(self.hr_npy_names)))
+        if self.all_qp: 
+            if len(glob.glob(os.path.join(hr_dir, "*.npy"))) != (len(self.hr_filenames)/number_of_qp):
+                for i in range(LEN):
+                    if (i+1) % 50 == 0:
+                        print("convert {} hr images to npy data!".format(i+1))
+                    hr_image = imageio.imread(self.hr_filenames[i], pilmode="RGB")
+                    if self.colors == 1:
+                        hr_image = sc.rgb2ycbcr(hr_image)[:, :, 0:1]
+                    hr_npy_name = self.hr_filenames[i].split('/')[-1].replace('.png', '.npy')
+                    hr_npy_name = os.path.join(hr_dir, hr_npy_name)
+                    self.hr_npy_names.append(hr_npy_name)
+                    np.save(hr_npy_name, hr_image)
+            else:
+                print("hr npy datas have already been prepared!, hr: {}".format(len(self.hr_npy_names)))
+        else: 
+            if len(glob.glob(os.path.join(hr_dir, "*.npy"))) != len(self.hr_filenames):
+                for i in range(LEN):
+                    if (i+1) % 50 == 0:
+                        print("convert {} hr images to npy data!".format(i+1))
+                    hr_image = imageio.imread(self.hr_filenames[i], pilmode="RGB")
+                    if self.colors == 1:
+                        hr_image = sc.rgb2ycbcr(hr_image)[:, :, 0:1]
+                    hr_npy_name = self.hr_filenames[i].split('/')[-1].replace('.png', '.npy')
+                    hr_npy_name = os.path.join(hr_dir, hr_npy_name)
+                    self.hr_npy_names.append(hr_npy_name)
+                    np.save(hr_npy_name, hr_image)
+            else:
+                print("hr npy datas have already been prepared!, hr: {}".format(len(self.hr_npy_names)))
         ## prepare lr images
         if len(glob.glob(os.path.join(lr_dir, "*.npy"))) != len(self.lr_filenames):
             for i in range(LEN):
@@ -138,7 +162,12 @@ class DIV2K(data.Dataset):
         idx = idx % self.nums_trainset
         # get whole image
         
-        hr, lr = np.load(self.hr_npy_names[idx]), np.load(self.lr_npy_names[idx])
+        if self.all_qp:
+            lr = np.load(self.lr_npy_names[idx])
+            basename = os.path.basename(self.lr_npy_names[idx])[:-12]
+            hr = np.load(os.path.join(self.hr_dir,basename+'.npy'))
+        else: 
+            hr, lr = np.load(self.hr_npy_names[idx]), np.load(self.lr_npy_names[idx])
         
         if self.train:
             train_lr_patch, train_hr_patch = crop_patch(lr, hr, self.patch_size, self.scale, True)
