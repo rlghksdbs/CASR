@@ -24,7 +24,7 @@ wd: 0.0
 min_lr: 0.000001
 
 ## parameters for model training
-epochs: 832
+epochs: 830
 
 patch_size: 384
 batch_size: 8
@@ -56,3 +56,4 @@ train_set: 'DIV2K'
 
 av1 : True
 qp_value : 31
+all_qp: False
