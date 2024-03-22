@@ -1,4 +1,4 @@
-model: 'RepNetwork_V012_BestStruct'
+model: 'RepNetwork_V012_BestStruct_teacher'
 comment: 'Val_BEST'
 ## parameters for plain
 scale: 4

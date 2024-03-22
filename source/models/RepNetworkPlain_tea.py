@@ -118,10 +118,11 @@ class RepNetwork_V011_BestStruct_teacher(nn.Module):
         
         self.head2 = self.repBlk(inp_planes=self.colors, out_planes=self.channel_nums, act_type=self.act_type)
 
-        for i in range(5):
-            backbone2 += [self.repBlk(inp_planes=self.channel_nums, out_planes=self.channel_nums, act_type=self.act_type)]
-        
-        self.backbone2 = nn.Sequential(*backbone2)
+        self.backbone2 = nn.Sequential(self.repBlk(inp_planes=self.channel_nums, out_planes=self.channel_nums,  act_type=act_type),
+                                        self.repBlk(inp_planes=self.channel_nums, out_planes=self.channel_nums,  act_type=act_type),
+                                        self.repBlk(inp_planes=self.channel_nums, out_planes=self.channel_nums,  act_type=act_type),
+                                        self.repBlk(inp_planes=self.channel_nums, out_planes=self.channel_nums,  act_type=act_type),                                
+                                        self.repBlk(inp_planes=self.channel_nums, out_planes=self.channel_nums,  act_type=act_type))
 
         self.input_conv2 = self.repBlk(inp_planes=self.channel_nums, out_planes=self.colors*self.scale*self.scale, act_type='linear')
 
@@ -251,11 +252,11 @@ class RepNetwork_V010_BestStruct_teacher_deploy(nn.Module):
 
         self.head2 = Conv3X3(inp_planes=self.colors, out_planes=self.channel_nums, act_type=self.act_type)
 
-        for i in range(5):
-            backbone2 += [Conv3X3(inp_planes=self.channel_nums, out_planes=self.channel_nums, act_type=self.act_type)]
-        
-        self.backbone2 = nn.Sequential(*backbone2)
-
+        self.backbone2 = nn.Sequential(Conv3X3(inp_planes=self.channel_nums, out_planes=self.channel_nums,  act_type=act_type),
+                                        Conv3X3(inp_planes=self.channel_nums, out_planes=self.channel_nums,  act_type=act_type),
+                                        Conv3X3(inp_planes=self.channel_nums, out_planes=self.channel_nums,  act_type=act_type),
+                                        Conv3X3(inp_planes=self.channel_nums, out_planes=self.channel_nums,  act_type=act_type),
+                                        Conv3X3(inp_planes=self.channel_nums, out_planes=self.channel_nums,  act_type=act_type))
         self.input_conv2 = Conv3X3(inp_planes=self.colors, out_planes=self.colors*self.scale*self.scale, act_type='linear')
         
         self.upsampler1 = nn.PixelShuffle(self.scale)
