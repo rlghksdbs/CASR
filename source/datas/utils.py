@@ -26,7 +26,7 @@ def create_datasets(args, mode='train'):
         div2k = DIV2K(
             os.path.join(args.data_path, 'Train', train_HR_path), 
             os.path.join(args.data_path, 'Train', train_LR_path), 
-            os.path.join(args.data_path, '{}_cache'.format(args.train_set)),
+            os.path.join(args.data_path, '{}_qpALL{}_cache'.format(args.train_set, str(args.all_qp))),
             train=True, 
             augment=args.data_augment, 
             scale=args.scale, 
@@ -45,7 +45,7 @@ def create_datasets(args, mode='train'):
         div2k_val = DIV2K(
             os.path.join(args.data_path, 'Val', validation_HR_path), 
             os.path.join(args.data_path, 'Val', validation_LR_path), 
-            os.path.join(args.data_path, '{}_cache_val'.format(args.val_set)),
+            os.path.join(args.data_path, '{}_qpALL{}_cache_val'.format(args.val_set, str(args.all_qp))),
             train=False, 
             augment=args.data_augment, 
             scale=args.scale, 
