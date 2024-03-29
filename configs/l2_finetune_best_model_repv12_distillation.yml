@@ -7,7 +7,7 @@ m_plainsr: 1
 c_plainsr: 32
 with_bn: 0
 act_type: 'gelu'
-pretrain: './chekpoints/scratch_model/models/model_x4_best.pt'
+pretrain: './scratch_model/models/model_x4_best.pt'
 
 ## loss function & optimizer
 loss: 'l2'
@@ -49,11 +49,13 @@ num_workers: 8
 ## data specification
 # data_path: '../datasets/AIS2024/'
 # test_path: '../datasets/AIS2024/val_phase/'
-data_path: '/dataset/SR/AIS2024/'
-test_path: '/dataset/SR/AIS2024/val_phase/'
+data_path: '../datasets/'
+test_path: '../datasets/RTSR/val_lr'
 val_set: 'DIV2K'
 train_set: 'DIV2K'
 
 av1 : True
 qp_value : 31
 all_qp: False
+
+distillation: True
