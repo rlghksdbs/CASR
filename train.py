@@ -14,7 +14,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.optim.lr_scheduler import MultiStepLR, StepLR
 
-    
+from source.models.plainRepConv import PlainRepConv, PlainRepConv_st01, PlainRepConv_BlockV2, PlainRepConv_All, PlainRepConvClip, PlainRepConv_deploy, PlainRepConv_BlockV2_deploy
+from source.models.RepNetworkPlain_tea import RepNetwork_V011_BestStruct_teacher, RepNetwork_V010_BestStruct_teacher_deploy
+
 from utils import save_img
 import numpy as np
 from source.models.get_model import get_model
@@ -82,6 +84,16 @@ if __name__ == '__main__':
 
     ## definitions of model
     model = get_model(args, device)
+
+    ## load teacher model
+    if args.distillation:
+        tea_model = PlainRepConv_BlockV2_deploy(module_nums=10, channel_nums=64, act_type='gelu', scale=4, colors=3)
+        ckpt = torch.load('./teacher_model/model_x4_best_submission_deploy.pt', map_location=device)
+        tea_model.load_state_dict(ckpt)
+        for k, v in tea_model.named_parameters():
+            v.requires_grad = False
+            print(k, ':', v.requires_grad)
+        tea_model = tea_model.to(device)
 
     ## definition of loss and optimizer & scheduler
     loss_func = get_criterion(args, device)
@@ -172,9 +184,16 @@ if __name__ == '__main__':
                 ###Use Unscaled Gradiendts instead of 
                 ### https://pytorch.org/docs/stable/notes/amp_examples.html#amp-examples
                 with amp.autocast(enabled=True):
-                    sr = model(lr)
-                    #_pred = torch.clamp(_pred, 0, 1)
-                    loss = loss_func(sr, hr)   
+                    if args.distillation:
+                        sr = model(lr)
+                        sr_tea = tea_model(lr)
+                        #_pred = torch.clamp(_pred, 0, 1)
+                        loss_l1 = loss_func(sr, hr)
+                        loss_tea = loss_func(sr_tea, sr)
+                        loss = loss_l1 + 0.1 * loss_tea   
+                    else:
+                        sr = model(lr)
+                        loss = loss_func(sr, hr)
                 scaler.scale(loss).backward()
                 
                 # Unscales the gradients of optimizer's assigned params i100n-place
