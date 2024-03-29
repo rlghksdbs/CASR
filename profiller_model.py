@@ -59,17 +59,18 @@ def inference_test_model(cfg, device):
     device = torch.device('cuda:{}'.format(0))
     
     x = torch.rand(1,3,540, 960).cuda(device=device)
+    #x = torch.rand(1,3,960, 540).cuda(device=device)
     
     #model_baseline = RealTimeSRNet(num_channels=3, num_feats=64, num_blocks=4, upscale=3).cuda(device=device)
-    model = get_model(cfg, device)
+    model = get_model(cfg, device,mode='Deploy')
     
     ###Model -> RepConv model
-    model.fuse_model()   #Inference mode
+    #model.fuse_model()   #Inference mode
     
     model.eval()
     #model_baseline.eval()
     
-    print(model)
+    #print(model)
     """
     SETUP RUNTIME
     """
@@ -87,14 +88,14 @@ def inference_test_model(cfg, device):
     # GPU warmp up
     print("Warm up ...")
     with torch.no_grad():
-        for _ in range(50):
+        for _ in range(224):
             _ = model(x) 
             
     print("Start timing ...")
     torch.cuda.synchronize()
 
     with torch.no_grad():
-        for _ in tqdm(range(244)):       
+        for _ in tqdm(range(1000)):       
             start.record()
             _ = model(x)
             end.record()
