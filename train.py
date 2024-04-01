@@ -42,7 +42,7 @@ except:
 
 parser = argparse.ArgumentParser(description='Simple Super Resolution')
 ## yaml configuration files
-parser.add_argument('--config', type=str, default='./configs/l2_finetune_best_model_repv12.yml', help = 'pre-config file for training')
+parser.add_argument('--config', type=str, default='./configs/l2_finetune_best_model_repv12_adamw.yml', help = 'pre-config file for training')
 parser.add_argument('--resume', type=str, default=None, help = 'resume training or not')
 parser.add_argument('--gpu_ids', type=int, default=0, help = 'gpu_ids')
 
@@ -262,9 +262,9 @@ if __name__ == '__main__':
                     if args.save_val_image and count < 20:
                         fname = str(count + 801).zfill(4) + '.jpg'
                         save_img(os.path.join(experiment_model_path,'./result_img/', str(epoch)+'_rec', fname), sr[0].cpu().numpy().transpose(1,2,0).astype(np.uint8), color_domain='rgb')
-                    pbar.set_postfix(epoch=f'{epoch}', psnr=f'{psnr:0.2f}')
+                    pbar.set_postfix(epoch=f'{epoch}', psnr=f'{psnr:0.4f}')
                     
-                avg_psnr = round(avg_psnr/len(loader) + 5e-3, 2)
+                avg_psnr = round(avg_psnr/len(loader) + 5e-3, 4)
                 avg_ssim = round(avg_ssim/len(loader) + 5e-5, 4)
                 stat_dict[name]['psnrs'].append(avg_psnr)
                 stat_dict[name]['ssims'].append(avg_ssim)
@@ -299,7 +299,7 @@ if __name__ == '__main__':
                 if stat_dict[name]['best_ssim']['value'] < avg_ssim:
                     stat_dict[name]['best_ssim']['value'] = avg_ssim
                     stat_dict[name]['best_ssim']['epoch'] = epoch
-                test_log += '[{}-X{}], PSNR/SSIM: {:.2f}/{:.4f} (Best: {:.2f}/{:.4f}, Epoch: {}/{})\n'.format(
+                test_log += '[{}-X{}], PSNR/SSIM: {:.4f}/{:.4f} (Best: {:.4f}/{:.4f}, Epoch: {}/{})\n'.format(
                     name, args.scale, float(avg_psnr), float(avg_ssim), 
                     stat_dict[name]['best_psnr']['value'], stat_dict[name]['best_ssim']['value'], 
                     stat_dict[name]['best_psnr']['epoch'], stat_dict[name]['best_ssim']['epoch'])
