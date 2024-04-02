@@ -531,7 +531,7 @@ class RepNetwork_V011_BestStruct(nn.Module):
         
         self.backbone = nn.Sequential(*backbone)
 
-        self.transition = nn.Sequential(self.repBlk(inp_planes=self.channel_nums, out_planes=self.colors*9, act_type='linear'))
+        self.transition = nn.Sequential(self.repBlk(inp_planes=self.channel_nums, out_planes=self.colors*9, act_type='linear', bias=self.bias))
         
         self.upsampler = nn.PixelShuffle(3)
         self.input_conv2 = self.repBlk(inp_planes=self.colors, out_planes=self.colors*self.scale*self.scale, act_type='linear', bias=self.bias)
