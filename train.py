@@ -42,7 +42,7 @@ except:
 
 parser = argparse.ArgumentParser(description='Simple Super Resolution')
 ## yaml configuration files
-parser.add_argument('--config', type=str, default='./configs/l2_finetune_best_model_repv12_adamw.yml', help = 'pre-config file for training')
+parser.add_argument('--config', type=str, default='./configs/l2_bias_off_finetune_best_model_repv12_adamw.yml', help = 'pre-config file for training')
 parser.add_argument('--resume', type=str, default=None, help = 'resume training or not')
 parser.add_argument('--gpu_ids', type=int, default=0, help = 'gpu_ids')
 
@@ -104,7 +104,10 @@ if __name__ == '__main__':
     if args.pretrain is not None:
         print('load pretrained model: {}!'.format(args.pretrain))
         ckpt = torch.load(args.pretrain, map_location=device)
-        model.load_state_dict(ckpt['model_state_dict'])
+        if args.bias:
+            model.load_state_dict(ckpt['model_state_dict'], strict=True)
+        else: 
+            model.load_state_dict(ckpt['model_state_dict'], strict=False)
     
     if args.wandb:
         wandb.watch(model, criterion=loss_func, log='all')

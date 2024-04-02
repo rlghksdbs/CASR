@@ -19,14 +19,14 @@ except ModuleNotFoundError:
     from RepConv_block import RepBlock, RepBlockV2, RepBlockV3, RepBlockV4, RepBlockV5, RepBlockV6
     
 class Conv3X3(nn.Module):
-    def __init__(self, inp_planes, out_planes, act_type='prelu'):
+    def __init__(self, inp_planes, out_planes, act_type='prelu', bias=True):
         super(Conv3X3, self).__init__()
 
         self.inp_planes = inp_planes
         self.out_planes = out_planes
         self.act_type = act_type
 
-        self.conv3x3 = torch.nn.Conv2d(self.inp_planes, self.out_planes, kernel_size=3, padding=1)
+        self.conv3x3 = torch.nn.Conv2d(self.inp_planes, self.out_planes, kernel_size=3, padding=1, bias=bias)
         self.act  = None
 
         if self.act_type == 'prelu':
@@ -510,7 +510,7 @@ class RepNetwork_V010_BestStruct(nn.Module):
             self.input_conv2 = conv.to(RK.device)
         
 class RepNetwork_V011_BestStruct(nn.Module):
-    def __init__(self, module_nums, channel_nums, act_type, scale, colors, block_type=RepBlockV2):
+    def __init__(self, module_nums, channel_nums, act_type, scale, colors, block_type=RepBlockV5, bias=True):
         super(RepNetwork_V011_BestStruct, self).__init__()
         self.module_nums = module_nums
         self.channel_nums = channel_nums
@@ -519,22 +519,22 @@ class RepNetwork_V011_BestStruct(nn.Module):
         self.act_type = act_type
         self.backbone = None
         self.upsampler = None
-        
+        self.bias = bias
         self.repBlk = block_type
 
         backbone = []
         self.pixelUnShuffle = nn.PixelUnshuffle(3)
-        self.head = self.repBlk(inp_planes=self.colors*9, out_planes=self.channel_nums, act_type=self.act_type)
+        self.head = self.repBlk(inp_planes=self.colors*9, out_planes=self.channel_nums, act_type=self.act_type, bias=self.bias)
         
         for i in range(self.module_nums):
-            backbone += [self.repBlk(inp_planes=self.channel_nums, out_planes=self.channel_nums, act_type=act_type)]
+            backbone += [self.repBlk(inp_planes=self.channel_nums, out_planes=self.channel_nums, act_type=act_type, bias=self.bias)]
         
         self.backbone = nn.Sequential(*backbone)
 
         self.transition = nn.Sequential(self.repBlk(inp_planes=self.channel_nums, out_planes=self.colors*9, act_type='linear'))
         
         self.upsampler = nn.PixelShuffle(3)
-        self.input_conv2 = self.repBlk(inp_planes=self.colors, out_planes=self.colors*self.scale*self.scale, act_type='linear')
+        self.input_conv2 = self.repBlk(inp_planes=self.colors, out_planes=self.colors*self.scale*self.scale, act_type='linear', bias=self.bias)
         
         self.upsampler1 = nn.PixelShuffle(self.scale)
     
@@ -555,6 +555,155 @@ class RepNetwork_V011_BestStruct(nn.Module):
         for idx, blk in enumerate(self.backbone):
             if type(blk) == self.repBlk:
                 RK, RB  = blk.repblock_convert()
+
+                conv = Conv3X3(blk.inp_planes, blk.out_planes, act_type=blk.act_type, bias=self.bias)
+                ## update weights & bias for conv3x3
+                conv.conv3x3.weight.data = RK
+                if self.bias:
+                    conv.conv3x3.bias.data   = RB
+
+                
+                ## update weights & bias for activation
+                if blk.act_type == 'prelu':
+                    conv.act.weight = blk.act.weight
+                ## update block for backbone
+                self.backbone[idx] = conv.to(RK.device)
+        #for idx, blk in enumerate(self.head):
+        if type(self.head) == self.repBlk:
+            RK, RB  = self.head.repblock_convert()
+            conv = Conv3X3(self.head.inp_planes, self.head.out_planes, act_type=self.head.act_type, bias=self.bias)
+            ## update weights & bias for conv3x3
+            conv.conv3x3.weight.data = RK
+            if self.bias:
+                conv.conv3x3.bias.data   = RB
+            ## update weights & bias for activation
+            if self.head.act_type == 'prelu':
+                conv.act.weight = self.head.act.weight
+            ## update block for backbone
+            self.head = conv.to(RK.device)
+        for idx, blk in enumerate(self.transition):
+            if type(blk) == self.repBlk:
+                RK, RB  = blk.repblock_convert()
+                conv = Conv3X3(blk.inp_planes, blk.out_planes, act_type=blk.act_type, bias=self.bias)
+                ## update weights & bias for conv3x3
+                conv.conv3x3.weight.data = RK
+                if self.bias:
+                    conv.conv3x3.bias.data   = RB
+                ## update weights & bias for activation
+                if blk.act_type == 'prelu':
+                    conv.act.weight = blk.act.weight
+                ## update block for backbone
+                self.transition[idx] = conv.to(RK.device)
+        if type(self.input_conv2) == self.repBlk:
+            RK, RB  = self.input_conv2.repblock_convert()
+            conv = Conv3X3(self.input_conv2.inp_planes, self.input_conv2.out_planes, act_type=self.input_conv2.act_type, bias=self.bias)
+            ## update weights & bias for conv3x3
+            conv.conv3x3.weight.data = RK
+            if self.bias:
+                conv.conv3x3.bias.data   = RB
+            ## update weights & bias for activation
+            if self.input_conv2.act_type == 'prelu':
+                conv.input_conv2.weight = self.input_conv2.act.weight
+            ## update block for backbone
+            self.input_conv2 = conv.to(RK.device)
+                
+class RepNetwork_V010_BestStruct_deploy(nn.Module):
+    def __init__(self, module_nums, channel_nums, act_type, scale, colors, bias=True):
+        super(RepNetwork_V010_BestStruct_deploy, self).__init__()
+        self.module_nums = module_nums
+        self.channel_nums = channel_nums
+        self.scale = scale
+        self.colors = colors
+        self.act_type = act_type
+        self.backbone = None
+        self.upsampler = None
+        self.bias=bias
+       
+        backbone = []
+        self.pixelUnShuffle = nn.PixelUnshuffle(3)
+        self.head = Conv3X3(inp_planes=self.colors*9, out_planes=self.channel_nums, act_type=self.act_type, bias=self.bias)
+        
+        for i in range(self.module_nums):
+            backbone += [Conv3X3(inp_planes=self.channel_nums, out_planes=self.channel_nums, act_type=act_type, bias=self.bias)]
+        
+        self.backbone = nn.Sequential(*backbone)
+
+        self.transition = nn.Sequential(#torch.nn.Conv2d(self.channel_nums, self.channel_nums, kernel_size=1, padding=0),
+                                        #conv_bn(in_channels=self.channel_nums, out_channels=self.colors*9, kernel_size=3, stride=1, padding=1, dilation=1, groups=1, act_type='linear', assign_type=OREPA))
+                                        Conv3X3(inp_planes=self.channel_nums, out_planes=self.colors*9, act_type='linear', bias=self.bias))
+                                        #Conv3X3(inp_planes=self.channel_nums, out_planes=self.colors*9, act_type='linear'))
+        
+        self.upsampler = nn.PixelShuffle(3)
+        self.input_conv2 = Conv3X3(inp_planes=self.colors, out_planes=self.colors*self.scale*self.scale, act_type='linear', bias=self.bias)
+        #self.input_conv2 = conv_bn(in_channels=self.colors, out_channels=self.colors**self.scale*self.scale, kernel_size=3, stride=1, padding=1, dilation=1, groups=1, act_type='linear', assign_type=OREPA)
+        #self.input_conv2 = Conv3X3(inp_planes=self.colors, out_planes=self.colors*self.scale*self.scale, act_type='linear')
+        
+        self.upsampler1 = nn.PixelShuffle(self.scale)
+    
+    def forward(self, x):
+        y0 = self.pixelUnShuffle(x)
+        y0 = self.head(y0)
+        y = self.backbone(y0) 
+        
+        #y = torch.cat([y, x], dim=1)
+        
+        y = self.transition(y)
+        y = self.upsampler(y) 
+        y = self.input_conv2(y+x)
+        y = self.upsampler1(y) 
+        
+        
+        return y
+        
+class RepNetwork_V111_BestStruct(nn.Module):
+    def __init__(self, module_nums, channel_nums, act_type, scale, colors, block_type=RepBlockV2):
+        super(RepNetwork_V111_BestStruct, self).__init__()
+        self.module_nums = module_nums
+        self.channel_nums = channel_nums
+        self.scale = scale
+        self.colors = colors
+        self.act_type = act_type
+        self.backbone = None
+        self.upsampler = None
+        
+        self.repBlk = block_type
+
+        #backboneA = []
+        self.pixelUnShuffle = nn.PixelUnshuffle(3)
+        self.head = self.repBlk(inp_planes=self.colors*9, out_planes=self.channel_nums, act_type=self.act_type)
+        
+        # for i in range(self.module_nums):
+        #     backboneA += [self.repBlk(inp_planes=self.channel_nums, out_planes=self.channel_nums, act_type=act_type)]
+        
+        self.backboneA = nn.Sequential(self.repBlk(inp_planes=self.channel_nums//2, out_planes=self.channel_nums//2, act_type=act_type))
+        self.backboneB = nn.Sequential(self.repBlk(inp_planes=self.channel_nums//2, out_planes=self.channel_nums//2, act_type=act_type))
+
+        self.transition = nn.Sequential(self.repBlk(inp_planes=self.channel_nums, out_planes=self.colors*9, act_type='linear'))
+        
+        self.upsampler = nn.PixelShuffle(3)
+        self.input_conv2 = self.repBlk(inp_planes=self.colors, out_planes=self.colors*self.scale*self.scale, act_type='linear')
+        
+        self.upsampler1 = nn.PixelShuffle(self.scale)
+    
+    def forward(self, x):
+        
+        y0 = self.pixelUnShuffle(x)
+        y0 = self.head(y0)
+        y0A, y0B = torch.split(y0, self.channel_nums//2, dim=1)
+        yA = self.backboneA(y0A) 
+        yB = self.backboneA(y0B) 
+        y = torch.concat([yA, yB], dim=1)
+        y = self.transition(y)
+        y = self.upsampler(y) 
+        y = self.input_conv2(y+x)
+        y = self.upsampler1(y) 
+        return y
+    
+    def fuse_model(self):
+        ## reparam as plainsrcd cd
+        for idx, blk in enumerate(self.backboneA):
+            if type(blk) == self.repBlk:
+                RK, RB  = blk.repblock_convert()
                 conv = Conv3X3(blk.inp_planes, blk.out_planes, act_type=blk.act_type)
                 ## update weights & bias for conv3x3
                 conv.conv3x3.weight.data = RK
@@ -563,7 +712,20 @@ class RepNetwork_V011_BestStruct(nn.Module):
                 if blk.act_type == 'prelu':
                     conv.act.weight = blk.act.weight
                 ## update block for backbone
-                self.backbone[idx] = conv.to(RK.device)
+                self.backboneA[idx] = conv.to(RK.device)
+        for idx, blk in enumerate(self.backboneB):
+            if type(blk) == self.repBlk:
+                RK, RB  = blk.repblock_convert()
+                conv = Conv3X3(blk.inp_planes, blk.out_planes, act_type=blk.act_type)
+                ## update weights & bias for conv3x3
+                conv.conv3x3.weight.data = RK
+                conv.conv3x3.bias.data   = RB
+                ## update weights & bias for activation
+                if blk.act_type == 'prelu':
+                    conv.act.weight = blk.act.weight
+                ## update block for backbone
+                self.backboneB[idx] = conv.to(RK.device)
+        
         #for idx, blk in enumerate(self.head):
         if type(self.head) == self.repBlk:
             RK, RB  = self.head.repblock_convert()
@@ -599,10 +761,10 @@ class RepNetwork_V011_BestStruct(nn.Module):
                 conv.input_conv2.weight = self.input_conv2.act.weight
             ## update block for backbone
             self.input_conv2 = conv.to(RK.device)
-                
-class RepNetwork_V010_BestStruct_deploy(nn.Module):
+            
+class RepNetwork_V111_BestStruct_deploy(nn.Module):
     def __init__(self, module_nums, channel_nums, act_type, scale, colors):
-        super(RepNetwork_V010_BestStruct_deploy, self).__init__()
+        super(RepNetwork_V111_BestStruct_deploy, self).__init__()
         self.module_nums = module_nums
         self.channel_nums = channel_nums
         self.scale = scale
@@ -611,14 +773,12 @@ class RepNetwork_V010_BestStruct_deploy(nn.Module):
         self.backbone = None
         self.upsampler = None
        
-        backbone = []
         self.pixelUnShuffle = nn.PixelUnshuffle(3)
         self.head = Conv3X3(inp_planes=self.colors*9, out_planes=self.channel_nums, act_type=self.act_type)
         
-        for i in range(self.module_nums):
-            backbone += [Conv3X3(inp_planes=self.channel_nums, out_planes=self.channel_nums, act_type=act_type)]
+        self.backboneA = nn.Sequential(Conv3X3(inp_planes=self.channel_nums//2, out_planes=self.channel_nums//2, act_type=act_type))
+        self.backboneB = nn.Sequential(Conv3X3(inp_planes=self.channel_nums//2, out_planes=self.channel_nums//2, act_type=act_type))
         
-        self.backbone = nn.Sequential(*backbone)
 
         self.transition = nn.Sequential(#torch.nn.Conv2d(self.channel_nums, self.channel_nums, kernel_size=1, padding=0),
                                         #conv_bn(in_channels=self.channel_nums, out_channels=self.colors*9, kernel_size=3, stride=1, padding=1, dilation=1, groups=1, act_type='linear', assign_type=OREPA))
@@ -635,9 +795,11 @@ class RepNetwork_V010_BestStruct_deploy(nn.Module):
     def forward(self, x):
         y0 = self.pixelUnShuffle(x)
         y0 = self.head(y0)
-        y = self.backbone(y0) 
         
-        #y = torch.cat([y, x], dim=1)
+        y0A, y0B = torch.split(y0, self.channel_nums//2, dim=1)
+        yA = self.backboneA(y0A) 
+        yB = self.backboneA(y0B) 
+        y = torch.concat([yA, yB], dim=1)
         
         y = self.transition(y)
         y = self.upsampler(y) 
@@ -646,7 +808,7 @@ class RepNetwork_V010_BestStruct_deploy(nn.Module):
         
         
         return y
-        
+            
 class RepNetwork_V014_BestStruct(nn.Module):
     def __init__(self, module_nums, channel_nums, act_type, scale, colors, block_type=RepBlockV2):
         super(RepNetwork_V014_BestStruct, self).__init__()
@@ -772,6 +934,238 @@ class RepNetwork_V014_BestStruct_deploy(nn.Module):
         y = self.upsampler1(y) 
         return y
                 
+class RepNetwork_V005_TypeA(nn.Module):
+    def __init__(self, module_nums, channel_nums, act_type, scale, colors, block_type=RepBlockV5):
+        super(RepNetwork_V005_TypeA, self).__init__()
+        self.module_nums = module_nums
+        self.channel_nums = channel_nums
+        self.scale = scale
+        self.colors = colors
+        self.act_type = act_type
+        self.backbone = None
+        self.upsampler = None
+        
+        self.repBlk = block_type
+
+        backbone = []
+        self.pixelUnShuffle = nn.PixelUnshuffle(3)
+        self.head = self.repBlk(inp_planes=self.colors*9, out_planes=self.channel_nums, act_type=self.act_type)
+        
+        for i in range(self.module_nums):
+            backbone += [self.repBlk(inp_planes=self.channel_nums, out_planes=self.channel_nums, act_type=act_type)]
+        
+        self.backbone = nn.Sequential(*backbone)
+
+        self.transition = nn.Sequential(self.repBlk(inp_planes=self.channel_nums, out_planes=self.colors*9, act_type='linear'))
+        
+        self.upsampler = nn.PixelShuffle(3)
+        self.input_conv2 = self.repBlk(inp_planes=self.colors, out_planes=self.colors*self.scale*self.scale, act_type='linear')
+        
+        self.noise_red = nn.Conv2d(in_channels=self.colors*self.scale*self.scale, out_channels=self.colors*self.scale*self.scale, kernel_size=1)
+        self.upsampler1 = nn.PixelShuffle(self.scale)
+    
+    def forward(self, x):
+        
+        y0 = self.pixelUnShuffle(x)
+        y0 = self.head(y0)
+        y = self.backbone(y0) 
+        
+        y = self.transition(y)
+        y = self.upsampler(y) 
+        y = self.input_conv2(y+x)
+        
+        y = self.noise_red(y)
+        y = self.upsampler1(y) 
+        return y
+    
+    def fuse_model(self):
+        ## reparam as plainsrcd cd
+        for idx, blk in enumerate(self.backbone):
+            if type(blk) == self.repBlk:
+                RK, RB  = blk.repblock_convert()
+                conv = Conv3X3(blk.inp_planes, blk.out_planes, act_type=blk.act_type)
+                ## update weights & bias for conv3x3
+                conv.conv3x3.weight.data = RK
+                conv.conv3x3.bias.data   = RB
+                ## update weights & bias for activation
+                if blk.act_type == 'prelu':
+                    conv.act.weight = blk.act.weight
+                ## update block for backbone
+                self.backbone[idx] = conv.to(RK.device)
+        #for idx, blk in enumerate(self.head):
+        if type(self.head) == self.repBlk:
+            RK, RB  = self.head.repblock_convert()
+            conv = Conv3X3(self.head.inp_planes, self.head.out_planes, act_type=self.head.act_type)
+            ## update weights & bias for conv3x3
+            conv.conv3x3.weight.data = RK
+            conv.conv3x3.bias.data   = RB
+            ## update weights & bias for activation
+            if self.head.act_type == 'prelu':
+                conv.act.weight = self.head.act.weight
+            ## update block for backbone
+            self.head = conv.to(RK.device)
+        for idx, blk in enumerate(self.transition):
+            if type(blk) == self.repBlk:
+                RK, RB  = blk.repblock_convert()
+                conv = Conv3X3(blk.inp_planes, blk.out_planes, act_type=blk.act_type)
+                ## update weights & bias for conv3x3
+                conv.conv3x3.weight.data = RK
+                conv.conv3x3.bias.data   = RB
+                ## update weights & bias for activation
+                if blk.act_type == 'prelu':
+                    conv.act.weight = blk.act.weight
+                ## update block for backbone
+                self.transition[idx] = conv.to(RK.device)
+        if type(self.input_conv2) == self.repBlk:
+            RK, RB  = self.input_conv2.repblock_convert()
+            conv = Conv3X3(self.input_conv2.inp_planes, self.input_conv2.out_planes, act_type=self.input_conv2.act_type)
+            ## update weights & bias for conv3x3
+            conv.conv3x3.weight.data = RK
+            conv.conv3x3.bias.data   = RB
+            ## update weights & bias for activation
+            if self.input_conv2.act_type == 'prelu':
+                conv.input_conv2.weight = self.input_conv2.act.weight
+            ## update block for backbone
+            self.input_conv2 = conv.to(RK.device)
+                
+class RepNetwork_V005_TypeA_deploy(nn.Module):
+    def __init__(self, module_nums, channel_nums, act_type, scale, colors):
+        super(RepNetwork_V005_TypeA_deploy, self).__init__()
+        self.module_nums = module_nums
+        self.channel_nums = channel_nums
+        self.scale = scale
+        self.colors = colors
+        self.act_type = act_type
+        self.backbone = None
+        self.upsampler = None
+       
+        backbone = []
+        self.pixelUnShuffle = nn.PixelUnshuffle(3)
+        self.head = Conv3X3(inp_planes=self.colors*9, out_planes=self.channel_nums, act_type=self.act_type)
+        
+        for i in range(self.module_nums):
+            backbone += [Conv3X3(inp_planes=self.channel_nums, out_planes=self.channel_nums, act_type=act_type)]
+        
+        self.backbone = nn.Sequential(*backbone)
+
+        self.transition = nn.Sequential(#torch.nn.Conv2d(self.channel_nums, self.channel_nums, kernel_size=1, padding=0),
+                                        #conv_bn(in_channels=self.channel_nums, out_channels=self.colors*9, kernel_size=3, stride=1, padding=1, dilation=1, groups=1, act_type='linear', assign_type=OREPA))
+                                        Conv3X3(inp_planes=self.channel_nums, out_planes=self.colors*9, act_type='linear'))
+                                        #Conv3X3(inp_planes=self.channel_nums, out_planes=self.colors*9, act_type='linear'))
+        
+        self.upsampler = nn.PixelShuffle(3)
+        self.input_conv2 = Conv3X3(inp_planes=self.colors, out_planes=self.colors*self.scale*self.scale, act_type='linear')
+        #self.input_conv2 = conv_bn(in_channels=self.colors, out_channels=self.colors**self.scale*self.scale, kernel_size=3, stride=1, padding=1, dilation=1, groups=1, act_type='linear', assign_type=OREPA)
+        #self.input_conv2 = Conv3X3(inp_planes=self.colors, out_planes=self.colors*self.scale*self.scale, act_type='linear')
+        self.noise_red = nn.Conv2d(in_channels=self.colors*self.scale*self.scale, out_channels=self.colors*self.scale*self.scale, kernel_size=1)
+        self.upsampler1 = nn.PixelShuffle(self.scale)
+    
+    def forward(self, x):
+        y0 = self.pixelUnShuffle(x)
+        y0 = self.head(y0)
+        y = self.backbone(y0) 
+        
+        #y = torch.cat([y, x], dim=1)
+        
+        y = self.transition(y)
+        y = self.upsampler(y) 
+        y = self.input_conv2(y+x)
+        y = self.noise_red(y)
+        y = self.upsampler1(y) 
+        return y
+        
+class RepNetwork_V040_BestStruct(nn.Module):
+    def __init__(self, module_nums, channel_nums, act_type, scale, colors, block_type=RepBlockV5):
+        super(RepNetwork_V040_BestStruct, self).__init__()
+        self.module_nums = module_nums
+        self.channel_nums = channel_nums
+        self.scale = scale
+        self.colors = colors
+        self.act_type = act_type
+        self.backbone = None
+        self.upsampler = None
+        
+        self.repBlk = block_type
+
+        backbone = []
+        self.pixelUnShuffle = nn.PixelUnshuffle(3)
+        self.head = self.repBlk(inp_planes=self.colors*9, out_planes=self.channel_nums, act_type=self.act_type)
+        
+        for i in range(self.module_nums):
+            backbone += [self.repBlk(inp_planes=self.channel_nums, out_planes=self.channel_nums, act_type=act_type)]
+        
+        self.backbone = nn.Sequential(*backbone)
+
+        self.transition = nn.Sequential(self.repBlk(inp_planes=self.channel_nums, out_planes=self.colors*9, act_type='linear'))
+        
+        self.upsampler = nn.PixelShuffle(3)
+        self.input_conv2 = self.repBlk(inp_planes=self.colors, out_planes=self.colors*self.scale*self.scale, act_type='linear')
+        
+        self.upsampler1 = nn.PixelShuffle(self.scale)
+    
+    def forward(self, x):
+        
+        y0 = self.pixelUnShuffle(x)
+        y0 = self.head(y0)
+        y = self.backbone(y0) 
+        
+        y = self.transition(y)
+        y = self.upsampler(y) 
+        y = self.input_conv2(y+x)
+        y = self.upsampler1(y) 
+        return y
+    
+    def fuse_model(self):
+        ## reparam as plainsrcd cd
+        for idx, blk in enumerate(self.backbone):
+            if type(blk) == self.repBlk:
+                RK, RB  = blk.repblock_convert()
+                conv = Conv3X3(blk.inp_planes, blk.out_planes, act_type=blk.act_type)
+                ## update weights & bias for conv3x3
+                conv.conv3x3.weight.data = RK
+                conv.conv3x3.bias.data   = RB
+                ## update weights & bias for activation
+                if blk.act_type == 'prelu':
+                    conv.act.weight = blk.act.weight
+                ## update block for backbone
+                self.backbone[idx] = conv.to(RK.device)
+        #for idx, blk in enumerate(self.head):
+        if type(self.head) == self.repBlk:
+            RK, RB  = self.head.repblock_convert()
+            conv = Conv3X3(self.head.inp_planes, self.head.out_planes, act_type=self.head.act_type)
+            ## update weights & bias for conv3x3
+            conv.conv3x3.weight.data = RK
+            conv.conv3x3.bias.data   = RB
+            ## update weights & bias for activation
+            if self.head.act_type == 'prelu':
+                conv.act.weight = self.head.act.weight
+            ## update block for backbone
+            self.head = conv.to(RK.device)
+        for idx, blk in enumerate(self.transition):
+            if type(blk) == self.repBlk:
+                RK, RB  = blk.repblock_convert()
+                conv = Conv3X3(blk.inp_planes, blk.out_planes, act_type=blk.act_type)
+                ## update weights & bias for conv3x3
+                conv.conv3x3.weight.data = RK
+                conv.conv3x3.bias.data   = RB
+                ## update weights & bias for activation
+                if blk.act_type == 'prelu':
+                    conv.act.weight = blk.act.weight
+                ## update block for backbone
+                self.transition[idx] = conv.to(RK.device)
+        if type(self.input_conv2) == self.repBlk:
+            RK, RB  = self.input_conv2.repblock_convert()
+            conv = Conv3X3(self.input_conv2.inp_planes, self.input_conv2.out_planes, act_type=self.input_conv2.act_type)
+            ## update weights & bias for conv3x3
+            conv.conv3x3.weight.data = RK
+            conv.conv3x3.bias.data   = RB
+            ## update weights & bias for activation
+            if self.input_conv2.act_type == 'prelu':
+                conv.input_conv2.weight = self.input_conv2.act.weight
+            ## update block for backbone
+            self.input_conv2 = conv.to(RK.device)
+            
+        
 if __name__ == "__main__":
     x = torch.rand(1,3,384,384).cuda()
     model = RepNetwork_V010_BestStruct(module_nums=6, channel_nums=64, act_type='relu', scale=3, colors=3).cuda().eval()
