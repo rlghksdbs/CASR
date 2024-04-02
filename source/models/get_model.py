@@ -10,7 +10,7 @@ from .RepNetworkPlain import *
 from .RepNetworkPlain_tea import *
 from .RepConv_block import RepBlock, RepBlockV2, RepBlockV3, RepBlockV4, RepBlockV5, RepBlockV6, RepBlockV7, RepBlockV8, RepBlockV9, RepBlockV10
 from .bicubic_plus_plus import Bicubic_plus_plus
-from .RepNetworkPlain_fidelity import RepNetwork_V011_fidelity_BestStruct, RepNetwork_V010_BestStruct_fidelity_deploy
+from .RepNetworkPlain_fidelity import RepNetwork_V011_fidelity_BestStruct, RepNetwork_V011_fidelity_BestStruct_V2, RepNetwork_V011_fidelity_BestStruct_V3, RepNetwork_V010_BestStruct_fidelity_deploy
 def init_weights(m):
   if isinstance(m, nn.Linear):
     torch.nn.init.xavier_uniform(m.weight)
@@ -140,6 +140,16 @@ def get_model(cfg, device, mode='Train'):
     elif cfg.model == 'RepNetwork_V012_BestStruct_fidelity':
         if mode == 'Train':
             model = RepNetwork_V011_fidelity_BestStruct(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors, block_type=RepBlockV5, bias=cfg.bias)
+        else: 
+            model = RepNetwork_V010_BestStruct_fidelity_deploy(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors, bias=cfg.bias)
+    elif cfg.model == 'RepNetwork_V012_BestStruct_fidelity_V2':
+        if mode == 'Train':
+            model = RepNetwork_V011_fidelity_BestStruct_V2(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors, block_type=RepBlockV5, bias=cfg.bias)
+        else: 
+            model = RepNetwork_V010_BestStruct_fidelity_deploy(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors, bias=cfg.bias)
+    elif cfg.model == 'RepNetwork_V012_BestStruct_fidelity_V3':
+        if mode == 'Train':
+            model = RepNetwork_V011_fidelity_BestStruct_V3(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors, block_type=RepBlockV5, bias=cfg.bias)
         else: 
             model = RepNetwork_V010_BestStruct_fidelity_deploy(module_nums=cfg.m_plainsr, channel_nums=cfg.c_plainsr, act_type=cfg.act_type, scale=cfg.scale, colors=cfg.colors, bias=cfg.bias)
  
