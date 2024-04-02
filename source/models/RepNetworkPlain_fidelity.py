@@ -121,7 +121,7 @@ class RepNetwork_V011_fidelity_BestStruct(nn.Module):
         
         self.backbone = nn.Sequential(*backbone)
 
-        self.transition = nn.Sequential(self.repBlk(inp_planes=16, out_planes=3, act_type='linear', bias=self.bias))
+        self.transition = nn.Sequential(self.repBlk(inp_planes=16, out_planes=3, act_type=self.act_type, bias=self.bias))
 
         self.transition_down = nn.Sequential(self.repBlk(inp_planes=32, out_planes=self.colors*9, act_type='linear', bias=self.bias))
         
@@ -285,7 +285,7 @@ class RepNetwork_V011_fidelity_BestStruct_V2(nn.Module):
         
         self.backbone = nn.Sequential(*backbone)
 
-        self.transition = nn.Sequential(self.repBlk(inp_planes=16, out_planes=3, act_type='linear', bias=self.bias))
+        self.transition = nn.Sequential(self.repBlk(inp_planes=16, out_planes=3, act_type=self.act_type, bias=self.bias))
 
         self.transition_down = nn.Sequential(self.repBlk(inp_planes=32, out_planes=self.colors*9, act_type='linear', bias=self.bias))
         
