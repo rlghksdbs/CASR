@@ -1,1 +1,1 @@
-python train.py --config ./config/AIS_scratch_model.yml
+python train.py --config ./configs/AIS_scratch_model.yml
