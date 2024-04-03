@@ -56,7 +56,7 @@ train_set: 'DIV2K'
 
 av1 : True
 qp_value : 31
-all_qp: True
+all_qp: False
 a_aug: False
 distillation: False
 bias: True
