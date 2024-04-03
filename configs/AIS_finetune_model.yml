@@ -7,7 +7,7 @@ m_plainsr: 1
 c_plainsr: 32
 with_bn: 0
 act_type: 'gelu'
-pretrain: './chekpoints/best_b1c32_scratch_22.78/RepNetwork_V012_BestStruct_x4_p384_m1_c32_gelu_l1_adam_lr0.0005_e800_t2024-0320-0719/models/model_x4_best.pt'
+pretrain: './pretrained_models/best_b1c32_scratch_22.78/RepNetwork_V012_BestStruct_x4_p384_m1_c32_gelu_l1_adam_lr0.0005_e800_t2024-0320-0719/models/model_x4_best.pt'
 
 ## loss function & optimizer
 loss: 'l2'
