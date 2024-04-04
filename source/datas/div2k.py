@@ -11,7 +11,50 @@ import torch.utils.data as data
 import skimage.color as sc
 import time
 from utils import ndarray2tensor
+import albumentations as A
 
+def crop_patch_albumentation(lr, hr, patch_size, scale, augment=True):
+    a_aug = True
+    
+    aug_train = A.Compose([A.ImageCompression(quality_lower=31, quality_upper=61, p=0.5)])
+    
+    # crop patch randomly
+    lr_h, lr_w, _ = lr.shape
+    hp = patch_size
+    lp = patch_size // scale
+    lx, ly = random.randrange(0, lr_w - lp), random.randrange(0, lr_h - lp)
+    hx, hy = lx * scale, ly * scale
+    #print(hx, hy)
+    lr_patch, hr_patch = lr[ly:ly+lp, lx:lx+lp, :], hr[hy:hy+hp, hx:hx+hp, :]
+    # augment data
+    if augment:
+        hflip = random.random() > 0.5
+        vflip = random.random() > 0.5
+        rot90 = random.random() > 0.5
+        if hflip: lr_patch, hr_patch = lr_patch[:, ::-1, :], hr_patch[:, ::-1, :]
+        if vflip: lr_patch, hr_patch = lr_patch[::-1, :, :], hr_patch[::-1, :, :]
+        if rot90: lr_patch, hr_patch = lr_patch.transpose(1,0,2), hr_patch.transpose(1,0,2)
+        lr_patch = aug_train(image=lr_patch)['image']
+        # numpy to tensor
+    lr_patch, hr_patch = ndarray2tensor(lr_patch), ndarray2tensor(hr_patch)
+    return lr_patch, hr_patch
+
+def crop_image(lr, hr, down_scale, scale):
+    # crop patch randomly
+    lr_h, lr_w, _ = lr.shape
+    if lr_h % down_scale != 0:
+        for j in range(1, down_scale):
+            if (lr_h - j) % down_scale == 0:
+                lr_h = lr_h - j
+    if lr_w % down_scale != 0:
+        for j in range(1, down_scale):
+            if (lr_w - j) % down_scale == 0:
+                lr_w = lr_w - j
+    
+    lr_new = lr[0:lr_h,       0:lr_w,      :]
+    hr_new = hr[0:lr_h*scale, 0:lr_w*scale,:]
+    return lr_new, hr_new
+    
 def crop_patch(lr, hr, patch_size, scale, augment=True):
     # crop patch randomly
     lr_h, lr_w, _ = lr.shape
@@ -37,7 +80,7 @@ class DIV2K(data.Dataset):
     def __init__(
         self, HR_folder, LR_folder, CACHE_folder, 
         train=True, augment=True, scale=2, colors=1, 
-        patch_size=96, repeat=168, normalize=True, av1=True, qp_value=31, all_qp=False
+        patch_size=96, repeat=168, normalize=True, av1=True, qp_value=31, all_qp=False, a_aug=False, down_scale=3
     ):
         super(DIV2K, self).__init__()
         self.HR_folder = HR_folder
@@ -55,6 +98,8 @@ class DIV2K(data.Dataset):
         self.av1 = av1
         self.qp_value = qp_value
         self.all_qp = all_qp
+        self.a_aug = a_aug
+        self.down_scale = down_scale
 
         ## for raw png images
         self.hr_filenames = []
@@ -170,7 +215,10 @@ class DIV2K(data.Dataset):
             hr, lr = np.load(self.hr_npy_names[idx]), np.load(self.lr_npy_names[idx])
         
         if self.train:
-            train_lr_patch, train_hr_patch = crop_patch(lr, hr, self.patch_size, self.scale, True)
+            if self.a_aug:
+                train_lr_patch, train_hr_patch = crop_patch_albumentation(lr, hr, self.patch_size, self.scale, True)
+            else:
+                train_lr_patch, train_hr_patch = crop_patch(lr, hr, self.patch_size, self.scale, True)
             #print(self.lr_npy_names[idx], train_lr_patch.size(1), train_lr_patch.size(2), train_hr_patch.size(1), train_hr_patch.size(2) )
             if self.normalize:
                 return train_lr_patch / 255., train_hr_patch / 255.
@@ -178,6 +226,7 @@ class DIV2K(data.Dataset):
                 return train_lr_patch, train_hr_patch
                 
         if self.normalize:
+            lr, hr = crop_image(lr, hr, self.down_scale, self.scale)
             return ndarray2tensor(lr / 255.), ndarray2tensor(hr / 255.)
         else: 
             return ndarray2tensor(lr), ndarray2tensor(hr)

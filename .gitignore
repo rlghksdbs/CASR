@@ -170,3 +170,5 @@ source/models/__pycache__/basicblock.cpython-38.pyc
 source/models/__pycache__/*
 source/__pycache__/losses.cpython-38.pyc
 */*/*.cpython-38.pyc
+benchmark/*
+configs/old/*

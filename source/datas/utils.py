@@ -36,7 +36,9 @@ def create_datasets(args, mode='train'):
             normalize=args.normalize,
             av1 = args.av1,
             qp_value = args.qp_value, 
-            all_qp = args.all_qp
+            all_qp = args.all_qp, 
+            a_aug = args.a_aug, 
+            down_scale=args.downscale,
         )
         train_dataloader = DataLoader(dataset=div2k, num_workers=args.num_workers, batch_size=args.batch_size, shuffle=True, pin_memory=False, drop_last=True)
         
@@ -55,7 +57,9 @@ def create_datasets(args, mode='train'):
             normalize=args.normalize,
             av1 = args.av1,
             qp_value = args.qp_value,
-            all_qp = args.all_qp
+            all_qp = args.all_qp,
+            a_aug = False,
+            down_scale=args.downscale,
         )
         valid_dataloaders += [{'name': str(args.val_set), 'dataloader': DataLoader(dataset=div2k_val, batch_size=1, shuffle=False)}]
     else: #test mode

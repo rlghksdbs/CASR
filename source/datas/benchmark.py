@@ -14,7 +14,7 @@ from utils import ndarray2tensor
 
 
 class Benchmark(data.Dataset):
-    def __init__(self, HR_folder, LR_folder, scale=2, colors=1, normalize=True):
+    def __init__(self, HR_folder, LR_folder, scale=2, colors=1, normalize=True, down_scale=3):
         super(Benchmark, self).__init__()
         self.HR_folder = HR_folder
         self.LR_folder = LR_folder
@@ -23,6 +23,7 @@ class Benchmark(data.Dataset):
         self.img_postfix = '.png'
         self.scale = scale
         self.colors = colors
+        self.down_scale = down_scale
 
         self.nums_dataset = 0
 
@@ -55,6 +56,17 @@ class Benchmark(data.Dataset):
         # get whole image, store in ram by default
         lr, hr = self.lr_images[idx], self.hr_images[idx]
         lr_h, lr_w, _ = lr.shape
+        if lr_h % self.down_scale != 0:
+        for j in range(1, self.down_scale):
+            if (lr_h - j) % self.down_scale == 0:
+                lr_h = lr_h - j
+        if lr_w % self.down_scale != 0:
+            for j in range(1, self.down_scale):
+                if (lr_w - j) % self.down_scale == 0:
+                    lr_w = lr_w - j
+        
+        lr = lr[0:lr_h,       0:lr_w,      :]
+    
         hr = hr[0:lr_h*self.scale, 0:lr_w*self.scale, :]
         lr, hr = ndarray2tensor(lr), ndarray2tensor(hr)
         return lr, hr

@@ -80,7 +80,7 @@ class SRDataset(data.Dataset):
         return img_L, self.lr_images[index]
 
 class Eval_Dataset(data.Dataset):
-    def __init__(self, lr_images_dir, hr_images_dir, transform=None, n_channels=3):
+    def __init__(self, lr_images_dir, hr_images_dir, transform=None, n_channels=3, scale=4, down_size=2):
         self.lr_images_dir = lr_images_dir
         self.lr_images = sorted(os.listdir(lr_images_dir))
         
@@ -89,6 +89,8 @@ class Eval_Dataset(data.Dataset):
 
         self.transform = transform
         self.n_channels = n_channels
+        self.down_size = down_size
+        self.scale = scale
 
     def __len__(self):
         if len(self.lr_images) == len(self.hr_images):
@@ -104,8 +106,21 @@ class Eval_Dataset(data.Dataset):
         img_H = util.imread_uint(hr_img_path, n_channels=self.n_channels)
         img_H = util.uint2tensor3(img_H)
 
+        _, lr_h, lr_w = img_L.shape
+        if lr_h % self.down_size != 0:
+            for j in range(1, self.down_size):
+                if (lr_h - j) % self.down_size == 0:
+                    lr_h = lr_h - j
+        if lr_w % self.down_size != 0:
+            for j in range(1, self.down_size):
+                if (lr_w - j) % self.down_size == 0:
+                    lr_w = lr_w - j
+        
+        img_L_new = img_L[:, 0:lr_h,       0:lr_w]
+        img_H_new = img_H[:, 0:lr_h*self.scale, 0:lr_w*self.scale]
+    
         if self.transform:
-            img_L = self.transform(img_L)
-            img_H = self.transform(img_H)
+            img_L_new = self.transform(img_L_new)
+            img_H_new = self.transform(img_H_new)
 
-        return img_L, self.lr_images[index], img_H, self.hr_images[index]
+        return img_L_new, self.lr_images[index], img_H_new, self.hr_images[index]

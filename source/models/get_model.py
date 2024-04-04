@@ -10,6 +10,7 @@ from .RepNetworkPlain import *
 from .RepNetworkPlain_tea import *
 from .RepConv_block import RepBlock, RepBlockV2, RepBlockV3, RepBlockV4, RepBlockV5, RepBlockV6, RepBlockV7, RepBlockV8, RepBlockV9, RepBlockV10
 from .bicubic_plus_plus import Bicubic_plus_plus
+from .AsConvSR import AsConvSR
 from .RepNetworkPlain_fidelity import RepNetwork_V011_fidelity_BestStruct, RepNetwork_V011_fidelity_BestStruct_V2, RepNetwork_V011_fidelity_BestStruct_V3, RepNetwork_V010_BestStruct_fidelity_deploy
 def init_weights(m):
   if isinstance(m, nn.Linear):
@@ -157,7 +158,9 @@ def get_model(cfg, device, mode='Train'):
     elif cfg.model == 'bicubic_plus_plus':
         model = Bicubic_plus_plus(sr_rate=cfg.scale)
 
-    
+    elif cfg.model == 'asconv':
+        model = AsConvSR(scale_factor=cfg.scale, device=device)
+        #model = AsConvSR(scale_factor=cfg.scale)
     else: 
         raise NameError('Choose proper model name!!!')
         
