@@ -94,18 +94,31 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     ### Bicubic plus
-    #parser.add_argument('--config', type=str, default='./configs/bicubic_plus_plus.yml')
-    #parser.add_argument('--weight', type=str, default='./chekpoints/sota/bicubic_plus_plus_x4_p384_m1_c32_gelu_l2_adam_lr5e-05_e1000_t2024-0402-0826/models/model_x4_best.pt')
-    #parser.add_argument('--outpath', type=str, default='./benchmark/bicubic_plus/')
+    # parser.add_argument('--config', type=str, default='./configs/bicubic_plus_plus.yml')
+    # parser.add_argument('--weight', type=str, default='./chekpoints/sota/bicubic_plus_plus_x4_p384_m1_c32_gelu_l2_adam_lr5e-05_e1000_t2024-0403-0126_bais_true/models/model_x4_best.pt')
+    # parser.add_argument('--outpath', type=str, default='./benchmark/bicubic_plus/')
+    # parser.add_argument('--down_size', type=int, default=2)
+    
+    # parser.add_argument('--config', type=str, default='./configs/bicubic_plus_plus.yml')
+    # parser.add_argument('--weight', type=str, default='./chekpoints/sota/bicubic_plus_plus_x4_p384_m1_c32_gelu_l2_adam_lr5e-05_e1000_t2024-0402-0826_bias_false/models/model_x4_best.pt')
+    # parser.add_argument('--outpath', type=str, default='./benchmark/bicubic_plus_bias_false/')
+    # parser.add_argument('--down_size', type=int, default=2)
+    
+    ### AsConv
+    # parser.add_argument('--config', type=str, default='./configs/asconv.yml')
+    # parser.add_argument('--weight', type=str, default='./chekpoints/sota/asconv_x4_p384_m1_c32_gelu_l1_adam_lr0.0005_e800_t2024-0404-0508/models/model_x4_best.pt')
+    # parser.add_argument('--outpath', type=str, default='./benchmark/asconv/')
+    # parser.add_argument('--down_size', type=int, default=2)
     
     ### Proposed
     parser.add_argument('--config', type=str, default='./configs/AIS_lasttune_model.yml')
     parser.add_argument('--weight', type=str, default='./chekpoints/sota/RepNetwork_V012_BestStruct_x4_p384_m1_c32_gelu_l2_adamw_lr5e-05_e800_t2024-0402-1405_26_6976/models/model_x4_best_submission_deploy.pt')
     parser.add_argument('--outpath', type=str, default='./benchmark/proposed/')
+    parser.add_argument('--down_size', type=int, default=3)
     
     parser.add_argument('--gpu_ids', type=int, default=0)
     parser.add_argument('--scale', type=int, default=4)
-    parser.add_argument('--down_size', type=int, default=3)
+    
     
 
     args = parser.parse_args()
@@ -153,24 +166,26 @@ if __name__ == '__main__':
     #                             "NTIRE2023":"/dataset/SR/RLSR/benchmark_compressed/benchmark/NTIRE2023/X{}_compressed/LR/".format(args.scale),
     #                             }
     dataset_evaluation_path_HR = {
-                                "Set5":"/dataset/SR/RLSR/benchmark/benchmark/Set5/HR/",
-                                "Set14":"/dataset/SR/RLSR/benchmark/benchmark/Set14/HR/",
-                                "B100":"/dataset/SR/RLSR/benchmark/benchmark/B100/HR/",
-                                "Urban100":"/dataset/SR/RLSR/benchmark/benchmark/Urban100/HR/",
-                                "DIV2K":"/dataset/SR/RLSR/benchmark/benchmark/DIV2K_valid/HR/",
+                                "Set5":"/dataset/SR/AIS2024/benchmark/Set5/HR/",
+                                "Set14":"/dataset/SR/AIS2024/benchmark/Set14/HR/",
+                                "B100":"/dataset/SR/AIS2024/benchmark/B100/HR/",
+                                "Urban100":"/dataset/SR/AIS2024/benchmark/Urban100/HR/",
+                                "DIV2K":"/dataset/SR/AIS2024/benchmark/DIV2K_valid/HR/",
+                                "Manga109":"/dataset/SR/AIS2024/benchmark/Manga109/HR/",
                                 #"NTIRE2023":"/dataset/SR/RLSR/benchmark_compressed/benchmark/NTIRE2023/X{}_compressed/HR_crop/".format(args.scale),
                                 }
     dataset_evaluation_path_LR = {
-                                "Set5":"/dataset/SR/RLSR/benchmark/benchmark/Set5/LR_bicubic/X{}/".format(args.scale),
-                                "Set14":"/dataset/SR/RLSR/benchmark/benchmark/Set14/LR_bicubic/X{}/".format(args.scale),
-                                "B100":"/dataset/SR/RLSR/benchmark/benchmark/B100/LR_bicubic/X{}/".format(args.scale),
-                                "Urban100":"/dataset/SR/RLSR/benchmark/benchmark/Urban100/LR_bicubic/X{}/".format(args.scale),
-                                "DIV2K":"/dataset/SR/RLSR/benchmark/benchmark/DIV2K_valid/LR_bicubic/X{}/".format(args.scale),
+                                "Set5":"/dataset/SR/AIS2024/benchmark/Set5/LR_avif/qp_31/",
+                                "Set14":"/dataset/SR/AIS2024/benchmark/Set14/LR_avif/qp_31/",
+                                "B100":"/dataset/SR/AIS2024/benchmark/B100/LR_avif/qp_31/",
+                                "Urban100":"/dataset/SR/AIS2024/benchmark/Urban100/LR_avif/qp_31/",
+                                "DIV2K":"/dataset/SR/AIS2024/benchmark/DIV2K_valid/LR_avif/qp_31/",
+                                "Manga109":"/dataset/SR/AIS2024/benchmark/Manga109/LR_avif/qp_31/",
                                 #"NTIRE2023":"/dataset/SR/RLSR/benchmark/benchmark/NTIRE2023/X{}_compressed/LR/".format(args.scale),
                                 }
 
     
-    datasets = ['Set5', 'Set14', 'B100', 'Urban100', 'DIV2K']
+    datasets = ['Set5', 'Set14', 'B100', 'Urban100', 'DIV2K', 'Manga109']
 
     psnrs_fp32 = evaluate_benchmark_fp32(args, model, dataset_evaluation_path_HR, dataset_evaluation_path_LR, datasets)
 

@@ -137,6 +137,20 @@ def imread_uint(path, n_channels=3):
         #     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  # RGB
     return img
 
+def imread_unit_avif(path, n_channels=3):
+    if n_channels == 1:
+        img = Image.open(path)  # cv2.IMREAD_GRAYSCALE
+        img = np.expand_dims(img, axis=2)  # HxWx1
+    elif n_channels == 3:
+        # img = cv2.imread(path, cv2.IMREAD_UNCHANGED)  # BGR or G
+        img = np.array(Image.open(path).convert("RGB"))
+        # if img.ndim == 2:
+        #     img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)  # GGG
+        # else:
+        #     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  # RGB
+    return img
+
+    #lr_image = Image.open(self.lr_filenames[i])
 
 def imsave(img, img_path):
     img = np.squeeze(img)

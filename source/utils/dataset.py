@@ -100,7 +100,7 @@ class Eval_Dataset(data.Dataset):
         lr_img_path = os.path.join(self.lr_images_dir, self.lr_images[index])
         hr_img_path = os.path.join(self.hr_images_dir, self.hr_images[index])
 
-        img_L = util.imread_uint(lr_img_path, n_channels=self.n_channels)
+        img_L = util.imread_unit_avif(lr_img_path, n_channels=self.n_channels)
         img_L = util.uint2tensor3(img_L)
 
         img_H = util.imread_uint(hr_img_path, n_channels=self.n_channels)
@@ -111,10 +111,15 @@ class Eval_Dataset(data.Dataset):
             for j in range(1, self.down_size):
                 if (lr_h - j) % self.down_size == 0:
                     lr_h = lr_h - j
+        elif  lr_h*self.scale > img_H.shape[1]:
+            lr_h = lr_h - self.down_size
+            
         if lr_w % self.down_size != 0:
             for j in range(1, self.down_size):
                 if (lr_w - j) % self.down_size == 0:
                     lr_w = lr_w - j
+        elif  lr_w*self.scale > img_H.shape[2]:
+            lr_w = lr_w - self.down_size
         
         img_L_new = img_L[:, 0:lr_h,       0:lr_w]
         img_H_new = img_H[:, 0:lr_h*self.scale, 0:lr_w*self.scale]
