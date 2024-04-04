@@ -120,13 +120,21 @@ class AssembledBlock(nn.Module):
                                                    self.kernel_size, self.kernel_size)  # bs * out_channels, in_channels // groups, h, w
         aggregate_weight3 = aggregate_weight3.view(bs * self.out_channels, self.out_channels // self.groups,
                                                    self.kernel_size, self.kernel_size)  # bs * out_channels, in_channels // groups, h, w
+        
+        aggregate_weight1 = aggregate_weight1.half()
+        aggregate_weight2 = aggregate_weight2.half()
+        aggregate_weight3 = aggregate_weight3.half()
+        
         if self.bias:
             aggregate_bias1 = aggregate_bias1.view(bs * self.out_channels) # bs * out_channels
             aggregate_bias2 = aggregate_bias2.view(bs * self.out_channels) # bs * out_channels
             aggregate_bias3 = aggregate_bias3.view(bs * self.out_channels) # bs * out_channels
         else:
             aggregate_bias1, aggregate_bias2, aggregate_bias3 = None, None, None
-            
+           
+        aggregate_bias1 = aggregate_bias1.half() 
+        aggregate_bias2 = aggregate_bias2.half() 
+        aggregate_bias3 = aggregate_bias3.half() 
         
         out = F.conv2d(x, weight=aggregate_weight1, bias=aggregate_bias1, stride=self.stride, padding=self.padding, 
                        dilation=self.dilation, groups=self.groups * bs)   # bs * out_channels, in_channels // groups, h, w

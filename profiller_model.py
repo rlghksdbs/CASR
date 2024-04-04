@@ -14,7 +14,7 @@ import torch.autograd.profiler as profiler
 
 parser = argparse.ArgumentParser(description='Simple Super Resolution')
 ## yaml configuration files
-parser.add_argument('--config', type=str, default='./configs/best_model_repv12.yml', help = 'pre-config file for training')
+parser.add_argument('--config', type=str, default='./configs/asconv.yml', help = 'pre-config file for training')
 parser.add_argument('--gpu_ids', type=int, default=0, help = 'gpu_ids')
 
 def profile_model(cfg):
@@ -53,13 +53,11 @@ def profile_model(cfg):
     print("::::::::::Proposed model:::::::::::::::::::::")
     print(prof2.key_averages(group_by_input_shape=True).table(sort_by="cuda_time_total", top_level_events_only=True))
     
-
-
 def inference_test_model(cfg, device):
     device = torch.device('cuda:{}'.format(0))
     
-    x = torch.rand(1,3,540, 960).cuda(device=device)
-    #x = torch.rand(1,3,960, 540).cuda(device=device)
+    #x = torch.rand(1,3,540, 960).cuda(device=device)
+    x = torch.rand(1,3,960, 540).cuda(device=device)
     
     #model_baseline = RealTimeSRNet(num_channels=3, num_feats=64, num_blocks=4, upscale=3).cuda(device=device)
     model = get_model(cfg, device,mode='Deploy')
@@ -112,12 +110,16 @@ def inference_test_model(cfg, device):
             print('------> Average runtime of FP32({}) is : {:.6f} ms'.format('Base test', ave_runtime))
 
 def calculate_macs(cfg, device):
-    input = torch.rand(1,3,540, 960).cuda(device=device)
-
-    model = get_model(cfg, device)
-
-    model.fuse_model()   #Inference mode
-
+    model = get_model(cfg, device, mode='Deploy')
+    
+    half_inference = True
+    if half_inference:
+        input = torch.rand(1,3,540, 960).cuda(device=device).half()
+        #model.fuse_model()   #Inference mode
+        model = model.half()
+    else: 
+        input = torch.rand(1,3,540, 960).cuda(device=device)
+    
     macs, params = profile(model, inputs=(input,))
 
     print(macs, params)
