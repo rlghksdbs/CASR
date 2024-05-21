@@ -1,4 +1,5 @@
-# Baseline Trainer Code for Real-Time Super Resolution
+# CASR : Efficient Cascade Network Structure with Channel Aligned method for 4K Real-Time Single Image Super-Resolution
+
 An older version implemented based on [SimpleIR](https://github.com/xindongzhang/SimpleIR).
 
 The following is more advanced version implemented by us.
