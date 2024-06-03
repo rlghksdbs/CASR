@@ -1,5 +1,6 @@
 # CASR : Efficient Cascade Network Structure with Channel Aligned method for 4K Real-Time Single Image Super-Resolution
 
+## Achieve 1st Place in AIS2024 RTSR Challenge 🎉
 An older version implemented based on [SimpleIR](https://github.com/xindongzhang/SimpleIR).
 
 The following is more advanced version implemented by us.
