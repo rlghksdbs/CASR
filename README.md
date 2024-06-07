@@ -56,10 +56,16 @@ You could also try less/larger batch-size, if there are limited/enough hardware 
 We use simple yamlfile for various settings during training. 
 You can set all Parameters at yaml file ***./config/name_of_model.yaml***
 ```
-cd simple_real_time_super_resolution
+cd CASR
 
-## If you set all settings correct
-python train.py --config ./configs/x4.yml
+## Scratch Stage
+sh train_scratch.sh
+
+## Fine-Tunning Stage
+sh train_finetune.sh
+
+## Lightweight-Tunning Stage
+sh train_lasttune.sh
 ```
 ### Testing
 You can set all Parameters in ***./config/config_base_test.yaml***
