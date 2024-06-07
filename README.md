@@ -87,3 +87,11 @@ You can check ideal model inference time by pytorch profilling tool. You can set
 ## If you set all settings correct
 python profiller_model.py
 ```
+
+# CASR Network Architecture & Challenge Results
+
+## Architecture
+<img src="images/CASR_network.png">
+
+## AIS2024 Results
+<img src="images/challenge_report.png">
