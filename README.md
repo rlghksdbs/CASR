@@ -1,7 +1,7 @@
 # CASR : Efficient Cascade Network Structure with Channel Aligned method for 4K Real-Time Single Image Super-Resolution
 
 ## Achieve 1st Place in CVPR2024 Workshop [AIS2024](https://ai4streaming-workshop.github.io/) RTSR Challenge 🎉
-### poster & presentation link
+### Poster & Presentation Link
 |  |  |
 |       :---       |     :---:     |
 | <a href="https://drive.google.com/file/d/1VT82c9WSLT6abWeX-eACAgRAtRWBisLk/view?usp=sharing"><img src="images/CASR_poster.png" width="300" border="0"></a> | <a href="https://drive.google.com/file/d/1XQzTyc29k3zA7sTNjZvcUNlwWIHY8ETE/view?usp=drive_link"><img src="images/CASR_ppt.png" width="270" border="0"></a> |
