@@ -1,13 +1,14 @@
 # CASR : Efficient Cascade Network Structure with Channel Aligned method for 4K Real-Time Single Image Super-Resolution
 
-## Achieve 1st Place in AIS2024 RTSR Challenge 🎉
-An older version implemented based on [SimpleIR](https://github.com/xindongzhang/SimpleIR).
+## Achieve 1st Place in CVPR2024 Workshop [AIS2024](https://ai4streaming-workshop.github.io/) RTSR Challenge 🎉
+### poster & presentation link
+|  |  |
+|       :---       |     :---:     |
+| <a href="https://drive.google.com/file/d/1VT82c9WSLT6abWeX-eACAgRAtRWBisLk/view?usp=sharing"><img src="images/CASR_poster.png" width="300" border="0"></a> | <a href="https://drive.google.com/file/d/1XQzTyc29k3zA7sTNjZvcUNlwWIHY8ETE/view?usp=drive_link"><img src="images/CASR_ppt.png" width="270" border="0"></a> |
+| | |
 
-The following is more advanced version implemented by us.
-  - Logger -> Wandb
-  - Argument parsing -> use config files at ./configs/
 
-### Dependencies & Installation
+# Dependencies & Installation
 
 Please refer to the following simple steps for installation.
 
@@ -17,7 +18,7 @@ cd CASR
 pip install -r requirements.txt
 ```
 
-### Docker Setting
+# Docker Setting
 ```
 docker build --tag ais2024 .
 nvidia-docker run --name ais2024 -it --gpus all --ipc=host --pid=host -v /your/data/path/:/AIS2024/dataset -v /your/sorce_code/:/AIS2024/source_code --shm-size=64g ais2024:latest
@@ -27,13 +28,14 @@ pip install -U numpy
 pip install torch==1.12.0+cu116 torchvision==0.13.0+cu116 torchaudio==0.12.0 --extra-index-url https://download.pytorch.org/whl/cu116
 ```
 
-### Dataset of SR
+# Prepare Dataset
 
-You can download all dataset about AIS2024 from Web [AIS2024](https://drive.google.com/drive/folders/1mD9bNoZDywvobOk1XrZupYKACF_nKN5t?usp=drive_link)
+## Download Train & Test Dataset
+AIS2024 dataset from Web [AIS2024](https://drive.google.com/drive/folders/1mD9bNoZDywvobOk1XrZupYKACF_nKN5t?usp=drive_link)
 
-You can download Div2k train dataset from Web [train](https://drive.google.com/drive/folders/1GKGXR9vwLHc8Lbuaw9SRQOyYqpM578df?usp=drive_link)
+Div2k train dataset from Web [DIV2K](https://drive.google.com/drive/folders/1GKGXR9vwLHc8Lbuaw9SRQOyYqpM578df?usp=drive_link)
 
-You can download Div2k validation bicubic dataset from Web [validation](https://drive.google.com/drive/folders/1_aVOZLJ5jjRxg9sBrUrR-X87jFkdV2eD?usp=drive_link)
+Div2k validation bicubic dataset from Web [validation](https://drive.google.com/drive/folders/1_aVOZLJ5jjRxg9sBrUrR-X87jFkdV2eD?usp=drive_link)
 
 Path of Dataset must be set in ./config/*name_of_yaml*.yaml
 
