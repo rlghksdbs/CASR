@@ -12,8 +12,8 @@ The following is more advanced version implemented by us.
 Please refer to the following simple steps for installation.
 
 ```
-git clone https://github.com/rlghksdbs/Real-TimeSR
-cd Real-TimeSR
+git clone https://github.com/rlghksdbs/CASR.git
+cd CASR
 pip install -r requirements.txt
 ```
 
