@@ -8,7 +8,7 @@
 | | |
 
 
-# Dependencies & Installation
+## Dependencies & Installation
 
 Please refer to the following simple steps for installation.
 
@@ -18,7 +18,7 @@ cd CASR
 pip install -r requirements.txt
 ```
 
-# Docker Setting
+## Docker Setting
 ```
 docker build --tag ais2024 .
 nvidia-docker run --name ais2024 -it --gpus all --ipc=host --pid=host -v /your/data/path/:/AIS2024/dataset -v /your/sorce_code/:/AIS2024/source_code --shm-size=64g ais2024:latest
@@ -28,9 +28,9 @@ pip install -U numpy
 pip install torch==1.12.0+cu116 torchvision==0.13.0+cu116 torchaudio==0.12.0 --extra-index-url https://download.pytorch.org/whl/cu116
 ```
 
-# Prepare Dataset
+## Prepare Dataset
 
-## Download Train & Test Dataset
+### Download Train & Test Dataset
 AIS2024 dataset from Web [AIS2024](https://drive.google.com/drive/folders/1mD9bNoZDywvobOk1XrZupYKACF_nKN5t?usp=drive_link)
 
 Div2k train dataset from Web [DIV2K](https://drive.google.com/drive/folders/1GKGXR9vwLHc8Lbuaw9SRQOyYqpM578df?usp=drive_link)
@@ -53,7 +53,7 @@ You can generate LR images with compression noise.
 python source/data/prepare_data.py 
 ```
 
-### Training
+## Training and Reproduction
 You could also try less/larger batch-size, if there are limited/enough hardware resources in your GPU-server.
 We use simple yamlfile for various settings during training. 
 You can set all Parameters at yaml file ***./config/name_of_model.yaml***
@@ -69,7 +69,7 @@ sh train_finetune.sh
 ## Lightweight-Tunning Stage
 sh train_lasttune.sh
 ```
-### Testing
+## Testing
 You can set all Parameters in ***./config/config_base_test.yaml***
 
 ```
@@ -77,21 +77,29 @@ You can set all Parameters in ***./config/config_base_test.yaml***
 python sr_demo.py
 ```
 
-### Check Result
+## Check Result
 Validation result image, Test result image, Best weight, Last weight and log files saved in this ***./output/{DATE_of_TODAY}/{Last_folder}*** folder.
 Wandb result [WANDB](https://wandb.ai/iilab/ECCV_MAI2020_SR)
 
-### Profilling model inference time
+## Profilling model inference time
 You can check ideal model inference time by pytorch profilling tool. You can set all Parameters in ***./config/config_base.yaml***
 ```
 ## If you set all settings correct
 python profiller_model.py
 ```
 
-# CASR Network Architecture & Challenge Results
+## CASR Network Architecture & Challenge Results
 
-## Architecture
+### Architecture
 <img src="images/CASR_network.png">
 
-## AIS2024 Results
+### AIS2024 Results
+Our model results in AIS2024 Challenge
+- 1st Place in Overall Score
+- 2nd Place in Runtumes
+- 3rd Place in MACs
+
 <img src="images/challenge_report.png">
+
+
+## Citation
