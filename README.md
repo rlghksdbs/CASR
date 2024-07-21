@@ -1,12 +1,23 @@
+<div align="center">
+
 # CASR : Efficient Cascade Network Structure with Channel Aligned method for 4K Real-Time Single Image Super-Resolution
 
 ## Achieve 1st Place in CVPR2024 Workshop [AIS2024](https://ai4streaming-workshop.github.io/) RTSR Challenge 🎉
-### Poster & Presentation Link
-|  |  |
-|       :---       |     :---:     |
-| <a href="https://drive.google.com/file/d/1VT82c9WSLT6abWeX-eACAgRAtRWBisLk/view?usp=sharing"><img src="images/CASR_poster.png" width="300" border="0"></a> | <a href="https://drive.google.com/file/d/1XQzTyc29k3zA7sTNjZvcUNlwWIHY8ETE/view?usp=drive_link"><img src="images/CASR_ppt.png" width="270" border="0"></a> |
-| | |
-
+### Page & Presentation Link
+<div>
+    <h4 align="center">
+        <a href="https://rlghksdbs.github.io/casr_page" target='_blank'>
+        <img src="https://img.shields.io/badge/🐳-Project%20Page-blue">
+        </a>
+        <a href="" target='_blank'>
+        <img src="https://img.shields.io/badge/arXiv-Paper-b31b1b.svg">
+        </a>
+        <a href="https://www.youtube.com/watch?v=BDkenaEL7ao" target='_blank'>
+        <img src="https://img.shields.io/badge/Presentation-%23FF0000.svg?logo=YouTube&logoColor=white">
+        </a>
+    </h4>
+</div>
+</div>
 
 ## Dependencies & Installation
 
@@ -87,19 +98,5 @@ You can check ideal model inference time by pytorch profilling tool. You can set
 ## If you set all settings correct
 python profiller_model.py
 ```
-
-## CASR Network Architecture & Challenge Results
-
-### Architecture
-<img src="images/CASR_network.png">
-
-### AIS2024 Results
-Our model results in AIS2024 Challenge
-- 1st Place in Overall Score
-- 2nd Place in Runtumes
-- 3rd Place in MACs
-
-<img src="images/challenge_report.png">
-
 
 ## Citation
