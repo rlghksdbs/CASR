@@ -42,7 +42,7 @@ pip install torch==1.12.0+cu116 torchvision==0.13.0+cu116 torchaudio==0.12.0 --e
 ## Prepare Dataset
 
 ### Download Train & Test Dataset
-AIS2024 dataset from Web [AIS2024](https://drive.google.com/drive/folders/1mD9bNoZDywvobOk1XrZupYKACF_nKN5t?usp=drive_link)
+AIS2024 dataset from Web [AIS2024](https://drive.google.com/drive/folders/13V_duk5NtFBkXatJbkML-rNMW4fhzFcK?usp=sharing)
 
 Div2k train dataset from Web [DIV2K](https://drive.google.com/drive/folders/1GKGXR9vwLHc8Lbuaw9SRQOyYqpM578df?usp=drive_link)
 
