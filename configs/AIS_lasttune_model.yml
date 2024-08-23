@@ -7,7 +7,7 @@ m_plainsr: 1
 c_plainsr: 32
 with_bn: 0
 act_type: 'gelu'
-pretrain: './pretrained_models/best_b1c32_finetune_22_8118/RepNetwork_V012_BestStruct_x4_p384_m1_c32_gelu_l2_adamw_lr5e-05_e800_t2024-0328-0147_26_7332/models/model_x4_best.pt'
+pretrain: './pretrained_models/finetune_22_8118/RepNetwork_V012_BestStruct_x4_p384_m1_c32_gelu_l2_adamw_lr5e-05_e800_t2024-0328-0147_26_7332/models/model_x4_best.pt'
 
 ## loss function & optimizer
 loss: 'l2'
@@ -52,11 +52,11 @@ num_workers: 8
 data_path: '../datasets/'
 test_path: '../datasets/RTSR/val_lr'
 val_set: 'DIV2K'
-train_set: 'Combined4'
+train_set: 'DIV2K'
 
 av1 : True
 qp_value : 31
-all_qp: True
+all_qp: False
 a_aug: False
 distillation: True
 bias: False

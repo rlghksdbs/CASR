@@ -1,0 +1,324 @@
+RepNetwork_V011_BestStruct(
+  (pixelUnShuffle): PixelUnshuffle(downscale_factor=3)
+  (head): RepBlockV5(
+    (act): GELU(approximate=none)
+    (conv0): Conv2d(27, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (conv1): Conv2d(256, 32, kernel_size=(1, 1), stride=(1, 1))
+    (conv0_b2): Conv2d(27, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (conv1_b2): Conv2d(128, 32, kernel_size=(1, 1), stride=(1, 1))
+    (conv1_res): Conv2d(27, 32, kernel_size=(1, 1), stride=(1, 1))
+  )
+  (backbone): Sequential(
+    (0): RepBlockV5(
+      (act): GELU(approximate=none)
+      (conv0): Conv2d(32, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (conv1): Conv2d(256, 32, kernel_size=(1, 1), stride=(1, 1))
+      (conv0_b2): Conv2d(32, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (conv1_b2): Conv2d(128, 32, kernel_size=(1, 1), stride=(1, 1))
+    )
+  )
+  (transition): Sequential(
+    (0): RepBlockV5(
+      (conv0): Conv2d(32, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (conv1): Conv2d(256, 27, kernel_size=(1, 1), stride=(1, 1))
+      (conv0_b2): Conv2d(32, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (conv1_b2): Conv2d(128, 27, kernel_size=(1, 1), stride=(1, 1))
+      (conv1_res): Conv2d(32, 27, kernel_size=(1, 1), stride=(1, 1))
+    )
+  )
+  (upsampler): PixelShuffle(upscale_factor=3)
+  (input_conv2): RepBlockV5(
+    (conv0): Conv2d(3, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (conv1): Conv2d(256, 48, kernel_size=(1, 1), stride=(1, 1))
+    (conv0_b2): Conv2d(3, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (conv1_b2): Conv2d(128, 48, kernel_size=(1, 1), stride=(1, 1))
+    (conv1_res): Conv2d(3, 48, kernel_size=(1, 1), stride=(1, 1))
+  )
+  (upsampler1): PixelShuffle(upscale_factor=4)
+)
+[DIV2K-X4], PSNR/SSIM: 26.71/0.7382 (Best: 26.71/0.7382, Epoch: 1/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.71/0.7376 (Best: 26.71/0.7382, Epoch: 1/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.71/0.7375 (Best: 26.71/0.7382, Epoch: 1/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.70/0.7368 (Best: 26.71/0.7382, Epoch: 1/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.71/0.7376 (Best: 26.71/0.7382, Epoch: 1/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7376 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.71/0.7375 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7373 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.71/0.7373 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.71/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.71/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.71/0.7375 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.71/0.7373 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.71/0.7371 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7372 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.71/0.7373 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.71/0.7371 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7370 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7373 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7373 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.71/0.7373 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7373 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7372 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7373 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7372 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7372 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7373 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7373 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.71/0.7371 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7373 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7373 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7373 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7372 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7373 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7376 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7373 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7372 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7373 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7370 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7372 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7373 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.72/0.7382, Epoch: 6/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7376 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7377 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7376 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7376 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7374 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7376 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7376 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7376 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.72/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7376 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7376 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7377 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7376 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7376 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7376 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7376 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7376 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7376 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7376 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7376 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7376 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7376 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7376 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7377 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7375 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7376 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7376 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7377 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7377 (Best: 26.73/0.7382, Epoch: 83/1)
+
+[DIV2K-X4], PSNR/SSIM: 26.73/0.7376 (Best: 26.73/0.7382, Epoch: 83/1)
+

@@ -72,13 +72,13 @@ You can set all Parameters at yaml file ***./config/name_of_model.yaml***
 cd CASR
 
 ## Scratch Stage
-sh train_scratch.sh
+python train.py --config ./configs/AIS_scratch_model.yml
 
 ## Fine-Tunning Stage
-sh train_finetune.sh
+python train.py --config ./configs/AIS_finetune_model.yml
 
 ## Lightweight-Tunning Stage
-sh train_lasttune.sh
+python train.py --config ./configs/AIS_lasttune_model.yml
 ```
 ## Testing
 You can set all Parameters in ***./config/config_base_test.yaml***

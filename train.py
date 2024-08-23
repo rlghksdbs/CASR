@@ -14,9 +14,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.optim.lr_scheduler import MultiStepLR, StepLR
 
-from source.models.plainRepConv import PlainRepConv, PlainRepConv_st01, PlainRepConv_BlockV2, PlainRepConv_All, PlainRepConvClip, PlainRepConv_deploy, PlainRepConv_BlockV2_deploy
-from source.models.RepNetworkPlain_tea import RepNetwork_V011_BestStruct_teacher, RepNetwork_V010_BestStruct_teacher_deploy
-
 from utils import save_img
 import numpy as np
 from source.models.get_model import get_model
@@ -26,6 +23,7 @@ from source.scheduler import get_scheduler
 from source.datas.utils import create_datasets
 import copy
 from torch.cuda import amp
+from source.models.plainRepConv import PlainRepConv_BlockV2, PlainRepConv_BlockV2_deploy
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -54,8 +52,6 @@ if __name__ == '__main__':
        opt.update(yaml_args)
     ## set visibel gpu   
     gpu_ids_str = str(args.gpu_ids)
-    # os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
-    # os.environ['CUDA_VISIBLE_DEVICES'] = '{}'.format(gpu_ids_str)
     
     ## select active gpu devices
     device = None
@@ -88,7 +84,7 @@ if __name__ == '__main__':
     ## load teacher model
     if args.distillation:
         tea_model = PlainRepConv_BlockV2_deploy(module_nums=10, channel_nums=64, act_type='gelu', scale=4, colors=3)
-        ckpt = torch.load('./teacher_model/model_x4_best_submission_deploy.pt', map_location=device)
+        ckpt = torch.load('./pretrained_models/teacher_model/model_x4_best_submission_deploy.pt', map_location=device)
         tea_model.load_state_dict(ckpt)
         for k, v in tea_model.named_parameters():
             v.requires_grad = False
@@ -117,7 +113,6 @@ if __name__ == '__main__':
     if args.resume is not None:
         ckpt_files = os.path.join(args.resume, 'models', "model_x4_last.pt")
         if len(ckpt_files) != 0:
-            #ckpt_files = sorted(ckpt_files, key=lambda x: int(x.replace('.pt','').split('_')[-1]))
             ckpt = torch.load(ckpt_files, map_location='cpu')
             prev_epoch = ckpt['epoch']
 
@@ -137,7 +132,6 @@ if __name__ == '__main__':
         timestamp = utils.cur_timestamp_str()
         if args.log_name is None:
             experiment_name = '{}_x{}_p{}_m{}_c{}_{}_{}_{}_lr{}_e{}_t{}'.format(args.model, args.scale, args.patch_size, args.m_plainsr, args.c_plainsr, args.act_type, args.loss, args.optimizer, args.lr, args.epochs, timestamp)
-            # experiment_name = '{}_x{}'.format(args.model, args.scale)
         else:
             experiment_name = '{}-{}'.format(args.log_name, timestamp)
         experiment_path = os.path.join(args.log_path, experiment_name)
@@ -170,10 +164,7 @@ if __name__ == '__main__':
         epoch_loss = 0.0
         stat_dict['epochs'] = epoch
         model = model.train()
-        #opt_lr = scheduler.get_last_lr()
         pbar = tqdm(enumerate(train_dataloader), total=len(train_dataloader), desc='Train {}:'.format(args.model))
-        #print('##===========training, Epoch: {}, lr: {} =============##'.format(epoch, opt_lr))
-        #for iter, batch in enumerate(train_dataloader):
         mem = torch.cuda.memory_reserved(device=args.gpu_ids) / 1E9 if torch.cuda.is_available() else 0
         try:
             current_lr = scheduler.get_lr()[0]

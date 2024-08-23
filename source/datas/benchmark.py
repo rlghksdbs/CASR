@@ -57,9 +57,9 @@ class Benchmark(data.Dataset):
         lr, hr = self.lr_images[idx], self.hr_images[idx]
         lr_h, lr_w, _ = lr.shape
         if lr_h % self.down_scale != 0:
-        for j in range(1, self.down_scale):
-            if (lr_h - j) % self.down_scale == 0:
-                lr_h = lr_h - j
+            for j in range(1, self.down_scale):
+                if (lr_h - j) % self.down_scale == 0:
+                    lr_h = lr_h - j
         if lr_w % self.down_scale != 0:
             for j in range(1, self.down_scale):
                 if (lr_w - j) % self.down_scale == 0:

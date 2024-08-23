@@ -8,15 +8,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 try:
-    from source.models.RepConv_block import RepBlock, RepBlockV2, RepBlockV3, RepBlockV4, RepBlockV5, RepBlockV6
-    from source.models.convnet_utils import conv_bn, conv_bn_relu
-
-    from source.models.basic import ConvBN
-    from source.models.blocks import DBB, OREPA_1x1, OREPA, OREPA_LargeConvBase, OREPA_LargeConv
-    from source.models.blocks_repvgg import RepVGGBlock, RepVGGBlock_OREPA
+    from source.models.RepConv_block import RepBlockV5
 
 except ModuleNotFoundError:
-    from RepConv_block import RepBlock, RepBlockV2, RepBlockV3, RepBlockV4, RepBlockV5, RepBlockV6
+    from RepConv_block import RepBlockV5
 
 class Conv3X3(nn.Module):
     def __init__(self, inp_planes, out_planes, act_type='prelu'):
@@ -90,7 +85,7 @@ class Conv3X3DWS(nn.Module):
     
 
 class RepNetwork_V011_BestStruct_teacher(nn.Module):
-    def __init__(self, module_nums, channel_nums, act_type, scale, colors, block_type=RepBlockV2):
+    def __init__(self, module_nums, channel_nums, act_type, scale, colors, block_type=RepBlockV5):
         super(RepNetwork_V011_BestStruct_teacher, self).__init__()
         self.module_nums = module_nums
         self.channel_nums = channel_nums

@@ -38,7 +38,6 @@ def create_datasets(args, mode='train'):
             qp_value = args.qp_value, 
             all_qp = args.all_qp, 
             a_aug = args.a_aug, 
-            down_scale=args.downscale,
         )
         train_dataloader = DataLoader(dataset=div2k, num_workers=args.num_workers, batch_size=args.batch_size, shuffle=True, pin_memory=False, drop_last=True)
         
@@ -59,23 +58,9 @@ def create_datasets(args, mode='train'):
             qp_value = args.qp_value,
             all_qp = args.all_qp,
             a_aug = False,
-            down_scale=args.downscale,
         )
         valid_dataloaders += [{'name': str(args.val_set), 'dataloader': DataLoader(dataset=div2k_val, batch_size=1, shuffle=False)}]
-    else: #test mode
-        # test_loader = DIV2K(
-        #         os.path.join(args.test_path, 'val_phase_HR/'), 
-        #         os.path.join(args.test_path, 'val_phase_LR/'), 
-        #         os.path.join(args.test_path, 'val_phase_cache'),
-        #         train=False, 
-        #         augment=args.data_augment, 
-        #         scale=args.scale, 
-        #         colors=args.colors, 
-        #         patch_size=args.patch_size, 
-        #         repeat=args.data_repeat, 
-        #     )
-        # test_dataloader = DataLoader(dataset=test_loader, batch_size=1, shuffle=False)
-            
+    else:             
         test_loader = VALPhaseLoader(
             os.path.join(args.test_path, 'val_phase_HR/'), 
             os.path.join(args.test_path, 'val_phase_LR/'), 
