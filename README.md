@@ -100,6 +100,7 @@ python profiller_model.py
 ```
 
 ## Citation
+```
 @InProceedings{Yoon_2024_CVPR,
     author    = {Yoon, Kihwan and Gankhuyag, Ganzorig and Park, Jinman and Son, Haengseon and Min, Kyoungwon},
     title     = {CASR: Efficient Cascade Network Structure with Channel Aligned method for 4K Real-Time Single Image Super-Resolution},
@@ -108,3 +109,4 @@ python profiller_model.py
     year      = {2024},
     pages     = {7911-7920}
 }
+```
