@@ -9,7 +9,7 @@
         <a href="https://rlghksdbs.github.io/casr_page" target='_blank'>
         <img src="https://img.shields.io/badge/🐳-Project%20Page-blue">
         </a>
-        <a href="" target='_blank'>
+        <a href="https://openaccess.thecvf.com/content/CVPR2024W/AI4Streaming/papers/Yoon_CASR_Efficient_Cascade_Network_Structure_with_Channel_Aligned_method_for_CVPRW_2024_paper.pdf" target='_blank'>
         <img src="https://img.shields.io/badge/arXiv-Paper-b31b1b.svg">
         </a>
         <a href="https://www.youtube.com/watch?v=BDkenaEL7ao" target='_blank'>
