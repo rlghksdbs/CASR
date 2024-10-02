@@ -5,9 +5,9 @@
 <div>    
     <a href='https://rlghksdbs.github.io/' target='_blank'>Kihwan Yoon</a><sup>1</sup>&nbsp;
     <a href='https://scholar.google.com/citations?user=PR4pvCMAAAAJ&hl=en' target='_blank'> Ganzorig Gankhuyag</a><sup>* 2</sup>&nbsp;
-    <a href='' target='_blank'>Jinman Park</a><sup>2</sup>
-    <a href='' target='_blank'>Haengseon Son</a><sup>2</sup>
-    <a href='' target='_blank'>Kyungwon Mon</a><sup>2</sup>
+    <a target='_blank'>Jinman Park</a><sup>2</sup>
+    <a target='_blank'>Haengseon Son</a><sup>2</sup>
+    <a target='_blank'>Kyungwon Mon</a><sup>2</sup>
 </div>
 <div>
     <sup>*</sup>Equal Contribution</span>
