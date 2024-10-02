@@ -2,6 +2,23 @@
 
 # CASR : Efficient Cascade Network Structure with Channel Aligned method for 4K Real-Time Single Image Super-Resolution
 
+<div>    
+    <a href='https://rlghksdbs.github.io/' target='_blank'>Kihwan Yoon</a><sup>1</sup>&nbsp;
+    <a href='https://scholar.google.com/citations?user=PR4pvCMAAAAJ&hl=en' target='_blank'> Ganzorig Gankhuyag</a><sup>* 2</sup>&nbsp;
+    <a href='' target='_blank'>Jinman Park</a><sup>2</sup>
+    <a href='' target='_blank'>Haengseon Son</a><sup>2</sup>
+    <a href='' target='_blank'>Kyungwon Mon</a><sup>2</sup>
+</div>
+<div>
+    <sup>*</sup>Equal Contribution</span>
+</div>
+<div>
+    <sup>1</sup>University of Seoul, South Korea
+</div>
+<div>
+    <sup>2</sup>Korea Electronics Technology Institute, South Korea
+</div>
+
 ## Achieve 1st Place in CVPR2024 Workshop [AIS2024](https://ai4streaming-workshop.github.io/) RTSR Challenge 🎉
 ### Page & Presentation Link
 <div>
